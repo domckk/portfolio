@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Clyde Dominick S. Morales — CS Student &amp; Aspiring Software Engineer" />
+  <title>Clyde Dominick S. Morales — Portfolio</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+<!-- ===================== LOADING SCREEN ===================== -->
+<div class="loading-screen" id="loading-screen">
+  <div class="loading-logo">cyy.mrls<span style="color:#8B5CF6">.</span></div>
+  <div class="loading-bar"><div class="loading-fill"></div></div>
+  <span class="loading-text">Initialising…</span>
+</div>
+
+<!-- ===================== BACKGROUNDS ===================== -->
+<canvas id="starfield"></canvas>
+<div class="nebula-overlay"></div>
+
+<!-- ===================== CURSOR ===================== -->
+<div class="cursor"         id="cursor"></div>
+<div class="cursor-follower" id="cursor-ring"></div>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav class="navbar" id="navbar">
+  <div class="nav-container">
+    <div class="nav-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">cyy.mrls<span class="accent">.</span></div>
+
+    <ul class="nav-links">
+      <li><a href="#hero">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <div class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobile-nav">
+  <a href="#hero">Home</a>
+  <a href="#about">About</a>
+  <a href="#projects">Projects</a>
+  <a href="#experience">Experience</a>
+  <a href="#contact">Contact</a>
+</div>
+
+<!-- ===================== HERO ===================== -->
+<section id="hero" class="hero">
+  <div class="hero-inner">
+
+    <!-- Left: Text Content -->
+    <div class="hero-content">
+      <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        Available for Work
+      </div>
+
+      <h1 class="hero-title">
+        Hi, I'm<br />
+        <span class="gradient-text">Clyde Dominick</span>
+      </h1>
+
+      <p class="hero-subtitle">
+        <span id="typed"></span>
+      </p>
+
+      <p class="hero-desc">
+        CS student at Mariano Marcos State University with a dream of becoming a
+        Software Engineer. I build systems, web apps, and security tools —
+        driven by determination and a growth mindset.
+      </p>
+
+      <div class="hero-cta">
+        <a href="#projects" class="btn btn-primary">
+          View Projects <i class="fas fa-arrow-right"></i>
+        </a>
+        <a href="#contact" class="btn btn-secondary">
+          Let's Talk
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-number" data-count="3" data-suffix="+">0+</span>
+          <span class="stat-label">Years Coding</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-number" data-count="9" data-suffix="+">0+</span>
+          <span class="stat-label">Projects Built</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-number" data-count="3" data-suffix="">0</span>
+          <span class="stat-label">Certifications</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Visual -->
+    <div class="hero-visual">
+      <!-- Ambient orbs -->
+      <div class="hero-orb hero-orb-1"></div>
+      <div class="hero-orb hero-orb-2"></div>
+      <div class="hero-orb hero-orb-3"></div>
+
+      <!-- Avatar -->
+      <div class="hero-avatar-wrap">
+        <div class="hero-avatar-ring">
+          <div class="hero-avatar-inner">
+            <img src="image/picture.jpg" alt="Clyde Dominick S. Morales" class="hero-avatar-photo" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating cards -->
+      <div class="floating-card fcard-1">
+        <i class="fas fa-shield-alt"></i> Cybersecurity
+      </div>
+      <div class="floating-card fcard-2">
+        <i class="fas fa-code"></i> Full Stack
+      </div>
+      <div class="floating-card fcard-3">
+        <i class="fas fa-brain"></i> AI / ML
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll indicator -->
+  <div class="scroll-indicator">
+    <div class="scroll-mouse"><div class="scroll-wheel"></div></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ===================== ABOUT ===================== -->
+<section id="about" class="about">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">About Me</span>
+      <h2 class="section-title">Passionate about <span class="gradient-text">building things</span></h2>
+      <p class="section-subtitle">CS student, developer, and security enthusiast on a mission to become a Software Engineer.</p>
+    </div>
+
+    <div class="about-grid">
+      <!-- Bio -->
+      <div class="about-text reveal reveal-delay-1">
+        <p>
+          Hey! I'm Clyde, a Computer Science student at Mariano Marcos State University, Batac City,
+          Ilocos Norte. I'm driven by a simple belief: determination is one of the key factors of
+          knowledge — and I bring that energy to every line of code I write.
+        </p>
+        <p>
+          My passion spans web development, systems programming, and cybersecurity. I've built
+          everything from AI-powered chatbots and real-time chat apps to low-level Assembly systems
+          and cryptography tools. I'm always pushing myself to learn, adapt, and ship.
+        </p>
+        <p>
+          My dream is to become a Software Engineer — building software that makes a real
+          difference. I'm currently open to internships and collaborative projects.
+        </p>
+
+        <div class="about-links">
+          <a href="https://github.com/domckk" class="about-link" target="_blank" rel="noopener">
+            <i class="fab fa-github"></i> GitHub
+          </a>
+          <a href="mailto:clydedominick09@gmail.com" class="about-link">
+            <i class="fas fa-envelope"></i> Email Me
+          </a>
+        </div>
+      </div>
+
+      <!-- Skills -->
+      <div class="reveal reveal-delay-2">
+        <p class="skills-section-title">Technical Skills</p>
+
+        <div class="skill-item">
+          <div class="skill-header">
+            <span class="skill-name">JavaScript / HTML / CSS</span>
+            <span class="skill-percent">88%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-fill" data-width="88" style="background:linear-gradient(90deg,#F7DF1E,#E34F26)"></div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-header">
+            <span class="skill-name">React &amp; Node.js</span>
+            <span class="skill-percent">82%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-fill" data-width="82"></div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-header">
+            <span class="skill-name">Python</span>
+            <span class="skill-percent">85%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-fill" data-width="85" style="background:linear-gradient(90deg,#3776AB,#22D3EE)"></div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-header">
+            <span class="skill-name">C / C++</span>
+            <span class="skill-percent">80%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-fill" data-width="80" style="background:linear-gradient(90deg,#00599C,#8B5CF6)"></div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-header">
+            <span class="skill-name">MySQL &amp; Databases</span>
+            <span class="skill-percent">78%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-fill" data-width="78" style="background:linear-gradient(90deg,#336791,#22D3EE)"></div>
+          </div>
+        </div>
+
+        <div class="skill-item">
+          <div class="skill-header">
+            <span class="skill-name">Cybersecurity</span>
+            <span class="skill-percent">75%</span>
+          </div>
+          <div class="skill-bar">
+            <div class="skill-fill" data-width="75" style="background:linear-gradient(90deg,#EC4899,#8B5CF6)"></div>
+          </div>
+        </div>
+
+        <p class="tech-grid-title">Tech Stack</p>
+        <div class="tech-grid">
+          <div class="tech-item"><i class="fab fa-react"   style="color:#61DAFB"></i>React</div>
+          <div class="tech-item"><i class="fab fa-node-js" style="color:#43853D"></i>Node.js</div>
+          <div class="tech-item"><i class="fab fa-python"  style="color:#3776AB"></i>Python</div>
+          <div class="tech-item"><i class="fas fa-code"    style="color:#00599C"></i>C / C++</div>
+          <div class="tech-item"><i class="fab fa-js"      style="color:#F7DF1E"></i>JavaScript</div>
+          <div class="tech-item"><i class="fas fa-database" style="color:#336791"></i>MySQL</div>
+          <div class="tech-item"><i class="fab fa-html5"   style="color:#E34F26"></i>HTML/CSS</div>
+          <div class="tech-item"><i class="fas fa-shield-alt" style="color:#EC4899"></i>Security</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PROJECTS ===================== -->
+<section id="projects" class="projects">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">Projects</span>
+      <h2 class="section-title">Things I've <span class="gradient-text">built</span></h2>
+      <p class="section-subtitle">A selection of school and personal projects — spanning AI, web development, security, and systems programming.</p>
+    </div>
+
+    <div class="projects-filter reveal reveal-delay-1">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="fullstack">Full Stack</button>
+      <button class="filter-btn" data-filter="ai">AI / Data</button>
+      <button class="filter-btn" data-filter="security">Security</button>
+      <button class="filter-btn" data-filter="systems">Systems</button>
+    </div>
+    <p class="projects-thesis-note reveal reveal-delay-2">
+      <i class="fas fa-star" style="color:#8B5CF6;font-size:0.7rem"></i>
+      <strong style="color:var(--accent-purple)">TheraMOVE</strong> is my thesis project at MMSU — Full Stack Lead Developer
+    </p>
+
+    <!-- Cards are injected by JS -->
+    <div class="projects-grid" id="projects-grid"></div>
+  </div>
+</section>
+
+<!-- ===================== EXPERIENCE ===================== -->
+<section id="experience" class="experience">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">Experience</span>
+      <h2 class="section-title">My <span class="gradient-text">journey</span></h2>
+      <p class="section-subtitle">From Ilocos Norte to MMSU — fueled by curiosity, determination, and a dream to engineer great software.</p>
+    </div>
+
+    <div class="timeline-tabs reveal reveal-delay-1">
+      <button class="timeline-tab active" data-tab="education">Education</button>
+      <button class="timeline-tab"        data-tab="work">Certificates</button>
+    </div>
+
+    <!-- Education Timeline -->
+    <div class="timeline-content-panel active" id="timeline-education">
+      <div class="timeline">
+
+        <div class="timeline-item">
+          <div class="timeline-dot"><i class="fas fa-graduation-cap"></i></div>
+          <div class="timeline-content">
+            <div class="timeline-period">2022 — Present</div>
+            <div class="timeline-title">Bachelor of Science in Computer Science</div>
+            <div class="timeline-org">Mariano Marcos State University · Batac City, Ilocos Norte</div>
+            <div class="timeline-desc">
+              Dean's Lister. Focused on software development, data structures, cybersecurity,
+              and systems programming. Actively building real-world projects across web, desktop,
+              and security domains.
+            </div>
+            <div class="timeline-skills">
+              <span class="timeline-skill">Data Structures</span>
+              <span class="timeline-skill">Web Development</span>
+              <span class="timeline-skill">Cybersecurity</span>
+              <span class="timeline-skill">Dean's Lister</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"><i class="fas fa-school"></i></div>
+          <div class="timeline-content">
+            <div class="timeline-period">2016 — 2022</div>
+            <div class="timeline-title">Senior High School</div>
+            <div class="timeline-org">Saint Anne Academy · Piddig, Ilocos Norte</div>
+            <div class="timeline-desc">
+              Graduated With Honors. Developed early foundations in mathematics,
+              science, and logical thinking that shaped my journey into Computer Science.
+            </div>
+            <div class="timeline-skills">
+              <span class="timeline-skill">With Honors</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Certificates Timeline -->
+    <div class="timeline-content-panel" id="timeline-work">
+      <div class="timeline">
+
+        <div class="timeline-item">
+          <div class="timeline-dot"><i class="fas fa-shield-alt"></i></div>
+          <div class="timeline-content">
+            <div class="timeline-period">2025</div>
+            <div class="timeline-title">Cyber Threat Management</div>
+            <div class="timeline-org">Cisco Networking Academy</div>
+            <div class="timeline-desc">
+              Covered threat analysis, incident response, network security monitoring,
+              and vulnerability management frameworks used in enterprise environments.
+            </div>
+            <div class="timeline-skills">
+              <span class="timeline-skill">Threat Analysis</span>
+              <span class="timeline-skill">Incident Response</span>
+              <span class="timeline-skill">Network Security</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"><i class="fas fa-user-secret"></i></div>
+          <div class="timeline-content">
+            <div class="timeline-period">2025</div>
+            <div class="timeline-title">Ethical Hacker</div>
+            <div class="timeline-org">Cisco Networking Academy</div>
+            <div class="timeline-desc">
+              Hands-on training in penetration testing methodologies, vulnerability
+              exploitation, social engineering, and ethical hacking techniques used
+              in cybersecurity assessments.
+            </div>
+            <div class="timeline-skills">
+              <span class="timeline-skill">Penetration Testing</span>
+              <span class="timeline-skill">Vulnerability Assessment</span>
+              <span class="timeline-skill">Ethical Hacking</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-dot"><i class="fas fa-lock"></i></div>
+          <div class="timeline-content">
+            <div class="timeline-period">2025</div>
+            <div class="timeline-title">Introduction to CyberSecurity</div>
+            <div class="timeline-org">Cisco Networking Academy</div>
+            <div class="timeline-desc">
+              Foundational certification covering cybersecurity principles, common attack
+              vectors, defence strategies, and the importance of security in the digital world.
+            </div>
+            <div class="timeline-skills">
+              <span class="timeline-skill">Cybersecurity Fundamentals</span>
+              <span class="timeline-skill">Attack Vectors</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================== CONTACT ===================== -->
+<section id="contact" class="contact">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">Contact</span>
+      <h2 class="section-title">Let's <span class="gradient-text">work together</span></h2>
+      <p class="section-subtitle">Have a project in mind, a question, or just want to say hello? I'd love to hear from you.</p>
+    </div>
+
+    <div class="contact-grid">
+      <!-- Info -->
+      <div class="reveal reveal-delay-1">
+        <h3 class="contact-info-title">Get in touch</h3>
+        <p class="contact-info-text">
+          I'm currently open to internships, collaboration, and project opportunities.
+          Whether you have a question, a project idea, or just want to connect —
+          I'd love to hear from you.
+        </p>
+
+        <div class="contact-items">
+          <div class="contact-item">
+            <div class="contact-item-icon"><i class="fas fa-envelope"></i></div>
+            <div>
+              <div class="contact-item-label">Email</div>
+              <div class="contact-item-value">clydedominick09@gmail.com</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon"><i class="fas fa-phone"></i></div>
+            <div>
+              <div class="contact-item-label">Phone</div>
+              <div class="contact-item-value">09924438041</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-item-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div>
+              <div class="contact-item-label">Location</div>
+              <div class="contact-item-value">Piddig, Ilocos Norte, Philippines</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="social-links">
+          <a href="https://github.com/domckk" class="social-link github" title="GitHub" target="_blank" rel="noopener"><i class="fab fa-github"></i></a>
+          <a href="mailto:clydedominick09@gmail.com" class="social-link email" title="Email"><i class="fas fa-envelope"></i></a>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="reveal reveal-delay-2">
+        <div class="contact-form-wrap">
+          <form id="contact-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="name">Name</label>
+                <input class="form-input" id="name" type="text" placeholder="John Doe" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="email">Email</label>
+                <input class="form-input" id="email" type="email" placeholder="john@example.com" required />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="subject">Subject</label>
+              <input class="form-input" id="subject" type="text" placeholder="What's this about?" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="message">Message</label>
+              <textarea class="form-textarea" id="message" placeholder="Tell me about your project or idea…" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-submit">
+              Send Message <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+
+          <div class="form-success" id="form-success">
+            <div class="form-success-icon"><i class="fas fa-check"></i></div>
+            <h3>Message sent!</h3>
+            <p>Thanks for reaching out — I'll get back to you within 24 hours.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">cyy.mrls<span class="accent">.</span></div>
+    <p class="footer-text">© 2026 Clyde Dominick S. Morales · Built with passion &amp; a lot of ☕</p>
+    <div class="footer-links">
+      <a href="#hero">Top</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== PROJECT MODAL ===================== -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-header">
+      <div id="modal-tags" class="modal-tags"></div>
+      <button class="modal-close" id="modal-close" aria-label="Close modal">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-preview">
+        <div id="modal-preview-bg" style="position:absolute;inset:0;">
+          <div class="modal-preview-dots"></div>
+        </div>
+        <div class="modal-preview-icon" id="modal-preview-icon"></div>
+      </div>
+
+      <h2 class="modal-title" id="modal-title"></h2>
+      <p  class="modal-desc"  id="modal-desc"></p>
+
+      <div class="modal-features">
+        <h4>Key Features</h4>
+        <ul id="modal-features-list"></ul>
+      </div>
+
+      <div class="modal-actions">
+        <a id="modal-github" href="#" class="btn btn-secondary btn-sm" target="_blank" rel="noopener">
+          <i class="fab fa-github"></i> View Code
+        </a>
+        <a id="modal-live" href="#" class="btn btn-primary btn-sm" target="_blank" rel="noopener">
+          <i class="fas fa-external-link-alt"></i> Live Demo
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SCRIPTS ===================== -->
+<!-- Typed.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.1.0/typed.umd.js"></script>
+<!-- Main -->
+<script src="main.js"></script>
+
+</body>
+</html>
