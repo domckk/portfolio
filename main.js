@@ -609,9 +609,9 @@ class WarpLoader {
     this.ctx     = canvas.getContext('2d');
     this.onDone  = onDone;
     this.stars   = [];
-    this.speed   = 1;
+    this.speed   = 32;
     this.maxSpd  = 32;
-    this.phase   = 'accelerate'; // accelerate | cruise | decelerate | done
+    this.phase   = 'cruise';
     this.tick    = 0;
     this.alive   = true;
 
@@ -654,10 +654,7 @@ class WarpLoader {
     this.tick++;
 
     /* ── phase transitions ── */
-    if (this.phase === 'accelerate') {
-      this.speed = Math.min(this.speed + 0.55, this.maxSpd);
-      if (this.speed >= this.maxSpd) this.phase = 'cruise';
-    } else if (this.phase === 'cruise') {
+    if (this.phase === 'cruise') {
       if (this.tick > 90) {
         this.alive = false;
         this.onDone && this.onDone();
