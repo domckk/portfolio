@@ -658,10 +658,7 @@ class WarpLoader {
       this.speed = Math.min(this.speed + 0.55, this.maxSpd);
       if (this.speed >= this.maxSpd) this.phase = 'cruise';
     } else if (this.phase === 'cruise') {
-      if (this.tick > 90) this.phase = 'decelerate';
-    } else if (this.phase === 'decelerate') {
-      this.speed = Math.max(this.speed - 1.4, 0);
-      if (this.speed <= 0) {
+      if (this.tick > 90) {
         this.alive = false;
         this.onDone && this.onDone();
         return;
