@@ -602,13 +602,149 @@ function heroEntrance () {
   });
 }
 
+/* ─── WARP SPEED LOADER ────────────────────────── */
+class WarpLoader {
+  constructor (canvas, onDone) {
+    this.canvas  = canvas;
+    this.ctx     = canvas.getContext('2d');
+    this.onDone  = onDone;
+    this.stars   = [];
+    this.speed   = 1;
+    this.maxSpd  = 32;
+    this.phase   = 'accelerate'; // accelerate | cruise | decelerate | done
+    this.tick    = 0;
+    this.alive   = true;
+
+    this.resize();
+    this.seed(320);
+    this.loop();
+
+    window.addEventListener('resize', () => this.resize());
+  }
+
+  resize () {
+    this.canvas.width  = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+    this.cx = this.canvas.width  / 2;
+    this.cy = this.canvas.height / 2;
+  }
+
+  mkStar (fromCenter = false) {
+    const palette = [
+      '#ffffff','#ffffff','#ffffff',
+      '#8B5CF6','#3B82F6','#22D3EE','#EC4899',
+    ];
+    const angle = Math.random() * Math.PI * 2;
+    return {
+      angle,
+      dist:  fromCenter ? Math.random() * 30 + 4 : Math.random() * Math.min(this.canvas.width, this.canvas.height) * 0.35,
+      vel:   Math.random() * 1.8 + 0.5,
+      size:  Math.random() * 1.3 + 0.3,
+      color: palette[Math.floor(Math.random() * palette.length)],
+      alpha: Math.random() * 0.4 + 0.6,
+    };
+  }
+
+  seed (n) {
+    for (let i = 0; i < n; i++) this.stars.push(this.mkStar(false));
+  }
+
+  draw () {
+    const { ctx, canvas, cx, cy } = this;
+    this.tick++;
+
+    /* ── phase transitions ── */
+    if (this.phase === 'accelerate') {
+      this.speed = Math.min(this.speed + 0.55, this.maxSpd);
+      if (this.speed >= this.maxSpd) this.phase = 'cruise';
+    } else if (this.phase === 'cruise') {
+      if (this.tick > 90) this.phase = 'decelerate';
+    } else if (this.phase === 'decelerate') {
+      this.speed = Math.max(this.speed - 1.4, 0);
+      if (this.speed <= 0) {
+        this.alive = false;
+        this.onDone && this.onDone();
+        return;
+      }
+    }
+
+    /* ── motion-blur trail ── */
+    ctx.fillStyle = 'rgba(2,8,23,0.22)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const spd = this.speed;
+    const pct = spd / this.maxSpd;
+
+    for (let i = this.stars.length - 1; i >= 0; i--) {
+      const s   = this.stars[i];
+      const d0  = s.dist;
+      s.dist   += s.vel * spd * 0.13;
+
+      const x1 = cx + Math.cos(s.angle) * d0;
+      const y1 = cy + Math.sin(s.angle) * d0;
+      const x2 = cx + Math.cos(s.angle) * s.dist;
+      const y2 = cy + Math.sin(s.angle) * s.dist;
+
+      /* off-screen — recycle */
+      if (x2 < -20 || x2 > canvas.width + 20 ||
+          y2 < -20 || y2 > canvas.height + 20) {
+        this.stars[i] = this.mkStar(true);
+        continue;
+      }
+
+      /* streak */
+      const grad = ctx.createLinearGradient(x1, y1, x2, y2);
+      grad.addColorStop(0, 'rgba(255,255,255,0)');
+      grad.addColorStop(1, s.color);
+
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.strokeStyle = grad;
+      ctx.lineWidth   = s.size * Math.min(pct * 2 + 0.2, 2);
+      ctx.globalAlpha = s.alpha * Math.min(spd / 6, 1);
+      ctx.stroke();
+
+      /* tip dot */
+      ctx.beginPath();
+      ctx.arc(x2, y2, s.size * 0.75, 0, Math.PI * 2);
+      ctx.fillStyle   = s.color;
+      ctx.globalAlpha = s.alpha;
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+
+    /* ── centre lens flare at peak speed ── */
+    if (pct > 0.85) {
+      const flare = ctx.createRadialGradient(cx, cy, 0, cx, cy, 120 * pct);
+      flare.addColorStop(0, `rgba(139,92,246,${(pct - 0.85) * 0.35})`);
+      flare.addColorStop(1, 'rgba(139,92,246,0)');
+      ctx.beginPath();
+      ctx.arc(cx, cy, 120 * pct, 0, Math.PI * 2);
+      ctx.fillStyle   = flare;
+      ctx.globalAlpha = 1;
+      ctx.fill();
+    }
+  }
+
+  loop () {
+    if (!this.alive) return;
+    this.draw();
+    requestAnimationFrame(() => this.loop());
+  }
+}
+
 /* ─── LOADING SCREEN ───────────────────────────── */
 function initLoading () {
   const screen = document.getElementById('loading-screen');
-  setTimeout(() => {
-    screen.classList.add('hidden');
-    heroEntrance();
-  }, 1800);
+  const canvas = document.getElementById('warp-canvas');
+
+  new WarpLoader(canvas, () => {
+    setTimeout(() => {
+      screen.classList.add('hidden');
+      heroEntrance();
+    }, 300);
+  });
 }
 
 /* ─── SMOOTH SCROLL FOR NAV LINKS ─────────────── */
