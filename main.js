@@ -211,19 +211,14 @@ class StarField {
     this.stars = [];
 
     for (let i = 0; i < density; i++) {
-      const layer = Math.floor(Math.random() * 3);
-      const angle = Math.random() * Math.PI * 2;
-      const spd   = (layer + 1) * (Math.random() * 0.12 + 0.04);
       this.stars.push({
-        x:      Math.random() * this.canvas.width,
-        y:      Math.random() * this.canvas.height,
-        r:      Math.random() * 1.4 + 0.2,
-        base:   Math.random(),
-        speed:  Math.random() * 0.025 + 0.005,
-        offset: Math.random() * Math.PI * 2,
-        layer,
-        vx:     Math.cos(angle) * spd,
-        vy:     Math.sin(angle) * spd,
+        x:       Math.random() * this.canvas.width,
+        y:       Math.random() * this.canvas.height,
+        r:       Math.random() * 1.4 + 0.2,
+        base:    Math.random(),
+        speed:   Math.random() * 0.025 + 0.005,
+        offset:  Math.random() * Math.PI * 2,
+        layer:   Math.floor(Math.random() * 3),
       });
     }
 
@@ -236,7 +231,6 @@ class StarField {
     ];
 
     for (let i = 0; i < 10; i++) {
-      const angle = Math.random() * Math.PI * 2;
       this.stars.push({
         x:      Math.random() * this.canvas.width,
         y:      Math.random() * this.canvas.height,
@@ -247,8 +241,6 @@ class StarField {
         layer:  0,
         glow:   true,
         color:  palettes[Math.floor(Math.random() * palettes.length)],
-        vx:     Math.cos(angle) * 0.06,
-        vy:     Math.sin(angle) * 0.06,
       });
     }
   }
@@ -262,15 +254,6 @@ class StarField {
     const my   = (this.mouse.y / canvas.height - 0.5) * 28;
 
     for (const s of this.stars) {
-      // drift
-      s.x += s.vx;
-      s.y += s.vy;
-      // wrap around edges
-      if (s.x < 0)              s.x = canvas.width;
-      if (s.x > canvas.width)   s.x = 0;
-      if (s.y < 0)              s.y = canvas.height;
-      if (s.y > canvas.height)  s.y = 0;
-
       const twinkle = s.base * (0.5 + 0.5 * Math.sin(t * s.speed * 60 + s.offset));
       const pf  = (s.layer + 1) * 0.28;
       const x   = s.x + mx * pf;
@@ -593,7 +576,6 @@ function initContactForm () {
   form.addEventListener('submit', e => {
     e.preventDefault();
     const btn = form.querySelector('.btn-submit');
-    const original = btn.innerHTML;
     btn.innerHTML  = '<i class="fas fa-spinner fa-spin"></i> Sending…';
     btn.disabled   = true;
 
