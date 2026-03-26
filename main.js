@@ -476,7 +476,9 @@ function buildProjectCards () {
       <div class="project-preview">
         <div class="project-preview-bg" style="background:${p.gradient}">
           <div class="project-preview-dots"></div>
-          <div class="project-preview-icon">${p.icon}</div>
+          ${p.logo
+            ? `<img src="${p.logo}" class="project-preview-logo" alt="${p.title} logo">`
+            : `<div class="project-preview-icon">${p.icon}</div>`}
         </div>
         ${p.featured ? '<div class="project-thesis-badge"><i class="fas fa-star"></i> Thesis</div>' : ''}
         ${p.award ? '<div class="project-award-badge"><i class="fas fa-trophy"></i> 1st Place</div>' : ''}
