@@ -468,6 +468,9 @@ function buildProjectCards () {
     card.dataset.id   = p.id;
     card.dataset.category = p.category;
 
+    const githubHref = p.github && p.github !== '#' ? p.github : 'javascript:void(0)';
+    const liveHref   = p.live   && p.live   !== '#' ? p.live   : 'javascript:void(0)';
+
     card.innerHTML = `
       <div class="project-preview">
         <div class="project-preview-bg" style="background:${p.gradient}">
@@ -482,8 +485,8 @@ function buildProjectCards () {
         <p class="project-desc">${p.description}</p>
         <div class="project-footer">
           <div class="project-links">
-            <a href="${p.github}" class="project-link" title="GitHub" onclick="event.stopPropagation()"><i class="fab fa-github"></i></a>
-            <a href="${p.live}"   class="project-link" title="Live Demo" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
+            <a href="${githubHref}" class="project-link" title="GitHub" target="_blank" rel="noopener" onclick="event.stopPropagation()"><i class="fab fa-github"></i></a>
+            <a href="${liveHref}"   class="project-link" title="Live Demo" target="_blank" rel="noopener" onclick="event.stopPropagation()"><i class="fas fa-external-link-alt"></i></a>
           </div>
           <span class="project-view-btn">Details <i class="fas fa-arrow-right"></i></span>
         </div>
@@ -516,8 +519,8 @@ function openModal (id) {
   document.getElementById('modal-desc').textContent            = p.longDesc;
   document.getElementById('modal-tags').innerHTML              = tagsHTML;
   document.getElementById('modal-features-list').innerHTML     = p.features.map(f => `<li>${f}</li>`).join('');
-  document.getElementById('modal-github').href = p.github;
-  document.getElementById('modal-live').href   = p.live;
+  document.getElementById('modal-github').href = p.github && p.github !== '#' ? p.github : 'javascript:void(0)';
+  document.getElementById('modal-live').href   = p.live   && p.live   !== '#' ? p.live   : 'javascript:void(0)';
 
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
