@@ -447,9 +447,7 @@ function initFilter () {
 
       cards.forEach(c => {
         const show = f === 'all' || c.dataset.category === f;
-        c.style.opacity        = show ? '1'    : '0.18';
-        c.style.transform      = show ? ''     : 'scale(0.95)';
-        c.style.pointerEvents  = show ? 'all'  : 'none';
+        c.style.display = show ? '' : 'none';
       });
     });
   });
@@ -470,15 +468,11 @@ function buildProjectCards () {
     card.dataset.id   = p.id;
     card.dataset.category = p.category;
 
-    const previewContent = p.logo
-      ? `<img src="${p.logo}" alt="${p.title} logo" class="project-preview-logo" />`
-      : `<div class="project-preview-icon">${p.icon}</div>`;
-
     card.innerHTML = `
       <div class="project-preview">
         <div class="project-preview-bg" style="background:${p.gradient}">
           <div class="project-preview-dots"></div>
-          ${previewContent}
+          <div class="project-preview-icon">${p.icon}</div>
         </div>
         ${p.featured ? '<div class="project-thesis-badge"><i class="fas fa-star"></i> Thesis</div>' : ''}
       </div>
@@ -517,12 +511,7 @@ function openModal (id) {
   ).join('');
 
   document.getElementById('modal-preview-bg').style.background = p.gradient;
-  const modalIcon = document.getElementById('modal-preview-icon');
-  if (p.logo) {
-    modalIcon.innerHTML = `<img src="${p.logo}" alt="${p.title}" style="max-height:90px;max-width:200px;object-fit:contain;filter:drop-shadow(0 0 16px rgba(139,92,246,0.4))" />`;
-  } else {
-    modalIcon.textContent = p.icon;
-  }
+  document.getElementById('modal-preview-icon').textContent = p.icon;
   document.getElementById('modal-title').textContent           = p.title;
   document.getElementById('modal-desc').textContent            = p.longDesc;
   document.getElementById('modal-tags').innerHTML              = tagsHTML;
