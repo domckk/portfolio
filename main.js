@@ -647,11 +647,11 @@ document.addEventListener('DOMContentLoaded', () => {
   new Cursor();
   initNav();
   initTyped();
-  initScrollReveal();
   initSkillBars();
   buildProjectCards();
   initCardTilt();
   initFilter();
+  initScrollReveal();
   initModal();
   initTimelineTabs();
   initTimelineReveal();
