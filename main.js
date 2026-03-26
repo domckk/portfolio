@@ -23,6 +23,7 @@ const PROJECTS = [
     ],
     description: 'Thesis — AI-powered therapeutic exercise recommender app for musculoskeletal pain patients using NLP and Case-Based Reasoning.',
     longDesc: 'Full Stack Lead Developer on TheraMOVE, a thesis research project at MMSU. The app uses a conversational interface to collect patient symptoms via NLP (spaCy + Rasa NLU), then a custom Case-Based Reasoning engine (Weighted K-NN) retrieves and adapts the most relevant therapeutic exercise plans for musculoskeletal pain patients.',
+    award: '🏆 1st Place — Research Colloquium & Technology Pitching · Innovative Excellence in Health & Bioinformatics Technology',
     features: [
       'Conversational symptom intake via NLP (spaCy + Rasa NLU)',
       'Case-Based Reasoning engine — Weighted K-NN similarity',
@@ -478,6 +479,7 @@ function buildProjectCards () {
           <div class="project-preview-icon">${p.icon}</div>
         </div>
         ${p.featured ? '<div class="project-thesis-badge"><i class="fas fa-star"></i> Thesis</div>' : ''}
+        ${p.award ? '<div class="project-award-badge"><i class="fas fa-trophy"></i> 1st Place</div>' : ''}
       </div>
       <div class="project-body">
         <div class="project-tags">${tagsHTML}</div>
@@ -517,6 +519,13 @@ function openModal (id) {
   document.getElementById('modal-preview-icon').textContent = p.icon;
   document.getElementById('modal-title').textContent           = p.title;
   document.getElementById('modal-desc').textContent            = p.longDesc;
+  const awardEl = document.getElementById('modal-award');
+  if (p.award) {
+    awardEl.textContent = p.award;
+    awardEl.style.display = '';
+  } else {
+    awardEl.style.display = 'none';
+  }
   document.getElementById('modal-tags').innerHTML              = tagsHTML;
   document.getElementById('modal-features-list').innerHTML     = p.features.map(f => `<li>${f}</li>`).join('');
   document.getElementById('modal-github').href = p.github && p.github !== '#' ? p.github : 'javascript:void(0)';

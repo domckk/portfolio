@@ -1144,6 +1144,30 @@ section {
   color: #FFD700;
 }
 
+.project-award-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #fff;
+  background: linear-gradient(135deg, #b45309, #ef4444);
+  padding: 5px 10px;
+  border-radius: 100px;
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.5);
+  z-index: 2;
+}
+
+.project-award-badge i {
+  font-size: 0.65rem;
+  color: #FFD700;
+}
+
 /* Glowing border for featured cards */
 .project-card.featured-card {
   border-color: rgba(139, 92, 246, 0.4);
@@ -1641,6 +1665,19 @@ footer {
   line-height: 1.8;
   margin-bottom: 24px;
   font-size: 0.95rem;
+}
+
+.modal-award {
+  display: inline-block;
+  background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(239,68,68,0.15));
+  border: 1px solid rgba(245,158,11,0.4);
+  color: #f59e0b;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  letter-spacing: 0.02em;
 }
 
 .modal-features h4 {
