@@ -23,7 +23,7 @@ const PROJECTS = [
     ],
     description: 'Thesis — AI-powered therapeutic exercise recommender app for musculoskeletal pain patients using NLP and Case-Based Reasoning.',
     longDesc: 'Full Stack Lead Developer on TheraMOVE, a thesis research project at MMSU. The app uses a conversational interface to collect patient symptoms via NLP (spaCy + Rasa NLU), then a custom Case-Based Reasoning engine (Weighted K-NN) retrieves and adapts the most relevant therapeutic exercise plans for musculoskeletal pain patients.',
-    award: '🏆 1st Place — Research Colloquium & Technology Pitching · Innovative Excellence in Health & Bioinformatics Technology',
+    award: '🏆 Best in Thesis · Innovative Excellence in Health & Bioinformatics Technology · CCIS Research Colloquium, March 2026',
     features: [
       'Conversational symptom intake via NLP (spaCy + Rasa NLU)',
       'Case-Based Reasoning engine — Weighted K-NN similarity',
@@ -37,26 +37,53 @@ const PROJECTS = [
   },
   {
     id: 'vital-link',
-    title: 'Vital-Link: AI Chatbot',
+    title: 'VitalLink: Healthcare Chatbot',
     category: 'ai',
     icon: '🏥',
     logo: 'image/vitallink.png',
     gradient: 'linear-gradient(135deg, #0a1840 0%, #1a0840 100%)',
-    tags: ['Python', 'AI', 'NLP', 'Healthcare'],
+    tags: ['React Native', 'FastAPI', 'ML', 'Healthcare'],
     tagColors: [
-      { bg: 'rgba(55,118,171,0.15)',  text: '#3776AB' },
+      { bg: 'rgba(97,218,251,0.15)',  text: '#61DAFB' },
+      { bg: 'rgba(0,150,136,0.15)',   text: '#26A69A' },
       { bg: 'rgba(139,92,246,0.15)',  text: '#8B5CF6' },
-      { bg: 'rgba(34,211,238,0.12)',  text: '#22D3EE' },
       { bg: 'rgba(16,185,129,0.12)',  text: '#10B981' },
     ],
-    description: 'AI-powered chatbot that assists users in identifying potential diseases by analyzing symptoms they provide.',
-    longDesc:    'Lead Developer on Vital-Link, an AI-driven healthcare chatbot. The system analyzes user-reported symptoms and maps them to potential conditions using trained NLP models. Designed to serve as a preliminary health guide, not a replacement for medical professionals.',
+    description: 'Healthcare chatbot app helping users in rural areas identify symptoms and get basic health advice, powered by machine learning.',
+    longDesc:    'Full Stack Developer on VitalLink, an AI-driven healthcare chatbot designed to serve users in rural areas who lack easy access to medical professionals. The app helps identify potential conditions from user-reported symptoms and provides basic health advice. Built with React Native Expo for the mobile frontend and FastAPI for the backend, with ML models powering symptom analysis.',
     features: [
-      'Symptom-to-disease mapping via NLP',
+      'Symptom-to-condition identification via ML',
+      'Basic health advice for rural communities',
+      'React Native Expo mobile app',
+      'FastAPI backend',
       'Conversational AI interface',
-      'Multi-symptom analysis engine',
-      'Healthcare-focused response filtering',
-      'Lead Developer role',
+      'Full Stack Developer role',
+    ],
+    github: 'https://github.com/domckk',
+    live:   '#',
+  },
+  {
+    id: 'ituro',
+    title: 'iTuro: Robotic Arm Controller',
+    category: 'fullstack',
+    icon: '🤖',
+    gradient: 'linear-gradient(135deg, #0a1820 0%, #1a0a30 100%)',
+    tags: ['React Native', 'IoT', 'Robotics', 'Inverse Kinematics'],
+    tagColors: [
+      { bg: 'rgba(97,218,251,0.15)',  text: '#61DAFB' },
+      { bg: 'rgba(34,211,238,0.15)',  text: '#22D3EE' },
+      { bg: 'rgba(16,185,129,0.12)',  text: '#10B981' },
+      { bg: 'rgba(139,92,246,0.12)',  text: '#8B5CF6' },
+    ],
+    description: 'A mobile app that lets you control a physical robotic arm wirelessly using your phone, with three control modes including natural language input.',
+    longDesc:    'Full Stack Developer on iTuro, a mobile application for wireless control of a physical robotic arm. Supported three distinct control modes: manual joint movement for direct axis control, precision dial control for fine adjustments, and natural language input with automatic inverse kinematics calculation — enabling intuitive, hands-free robotic arm manipulation from a smartphone.',
+    features: [
+      'Manual joint movement control mode',
+      'Precision dial control mode',
+      'Natural language input control',
+      'Automatic inverse kinematics (IK) calculation',
+      'Wireless connectivity to physical robotic arm',
+      'Full Stack Developer role',
     ],
     github: 'https://github.com/domckk',
     live:   '#',
@@ -481,7 +508,7 @@ function buildProjectCards () {
             : `<div class="project-preview-icon">${p.icon}</div>`}
         </div>
         ${p.featured ? '<div class="project-thesis-badge"><i class="fas fa-star"></i> Thesis</div>' : ''}
-        ${p.award ? '<div class="project-award-badge"><i class="fas fa-trophy"></i> 1st Place</div>' : ''}
+        ${p.award ? '<div class="project-award-badge"><i class="fas fa-trophy"></i> Best in Thesis</div>' : ''}
       </div>
       <div class="project-body">
         <div class="project-tags">${tagsHTML}</div>
