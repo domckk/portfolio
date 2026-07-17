@@ -191,6 +191,16 @@
     @apply bg-ink-50/7 text-ink-50;
   }
 
+  /* --- Floating skill chips around the hero photo ---
+     Desktop only: the phone photo is ~112px wide, and chips around it would
+     collide with the name. */
+  .float-chip {
+    @apply absolute z-10 hidden items-center gap-2 rounded-lg
+           border border-ink-50/10 bg-ink-900/80 px-3 py-2
+           shadow-lg shadow-ink-950/50 backdrop-blur-md lg:flex;
+    animation: float-y 6s ease-in-out infinite;
+  }
+
   /* --- Scroll progress bar --- */
   .scroll-progress {
     @apply fixed inset-x-0 top-0 z-60 h-0.5 origin-left
@@ -235,6 +245,11 @@
     content: "";
     @apply absolute -bottom-0.5 left-0 h-px w-full bg-accent-400;
   }
+}
+
+@keyframes float-y {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-9px); }
 }
 
 /* =============================================

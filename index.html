@@ -162,6 +162,21 @@
           width="201" height="383"
           fetchpriority="high"
         />
+
+        <!-- Floating skill chips — decorative, so hidden from screen readers
+             (the same skills are listed properly in the About section). -->
+        <div class="float-chip -left-8 top-[16%]" style="animation-delay:0s" aria-hidden="true">
+          <i class="fas fa-code text-xs text-accent-400"></i>
+          <span class="font-mono text-[11px] text-ink-200">Full Stack</span>
+        </div>
+        <div class="float-chip -right-6 top-[44%]" style="animation-delay:1.6s" aria-hidden="true">
+          <i class="fas fa-brain text-xs text-accent-400"></i>
+          <span class="font-mono text-[11px] text-ink-200">AI / ML</span>
+        </div>
+        <div class="float-chip -left-4 bottom-[16%]" style="animation-delay:3.2s" aria-hidden="true">
+          <i class="fas fa-mobile-screen-button text-xs text-accent-400"></i>
+          <span class="font-mono text-[11px] text-ink-200">Mobile Apps</span>
+        </div>
       </div>
 
     </div>
@@ -181,22 +196,34 @@
     <div class="mt-14 grid gap-14 lg:grid-cols-2 lg:gap-20">
 
       <!-- Bio -->
-      <div class="reveal reveal-d1 space-y-5 text-[15px] leading-relaxed text-ink-300">
+      <div class="reveal reveal-d1 text-[15px] leading-relaxed text-ink-300">
         <p>
-          I'm a Computer Science graduate from Mariano Marcos State University in Batac City,
-          Ilocos Norte, and an Academic Achiever across two semesters. I care about
-          software that reaches people who need it.
+          I'm a Computer Science graduate from Mariano Marcos State University in
+          Batac City, Ilocos Norte. I care about software that reaches the people
+          who actually need it.
         </p>
-        <p>
-          My work spans web development, mobile development, and AI/ML. I've built
-          AI-powered healthcare chatbots, IoT robotic arm controllers, real-time
-          encrypted chat apps, and cryptography tooling. In March 2026 my thesis,
-          TheraMOVE, won Best in Thesis for Innovative Excellence in Health and
-          Bioinformatics Technology.
-        </p>
-        <p>
-          I'm currently open to full-time roles and collaborative projects.
-        </p>
+
+        <!-- Philosophy — his own words, carried over from the original site -->
+        <blockquote class="my-7 border-l-2 border-accent-500/70 pl-5">
+          <p class="text-pretty text-[17px] leading-snug text-ink-100 md:text-lg">
+            Determination is one of the key factors of knowledge.
+          </p>
+          <footer class="mt-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-400">
+            The belief behind every line I write
+          </footer>
+        </blockquote>
+
+        <div class="space-y-5">
+          <p>
+            My work spans web development, mobile development, and AI/ML. I've built
+            AI-powered healthcare chatbots, IoT robotic arm controllers, real-time
+            encrypted chat apps, and cryptography tooling — and I'm always pushing
+            myself to learn, adapt, and ship.
+          </p>
+          <p>
+            I'm currently open to full-time roles and collaborative projects.
+          </p>
+        </div>
 
         <div class="flex flex-wrap gap-3 pt-3">
           <a href="https://github.com/domckk" class="btn btn-secondary btn-sm" target="_blank" rel="noopener">
