@@ -332,18 +332,21 @@ function initNav () {
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  toggle.addEventListener('click', () => {
-    const open = mobile.classList.toggle('hidden') === false;
+  const setMenu = open => {
+    mobile.classList.toggle('open', open);
     toggle.setAttribute('aria-expanded', String(open));
     toggle.innerHTML = `<i class="fas fa-${open ? 'times' : 'bars'} text-sm"></i>`;
-  });
+  };
 
-  $$('a', mobile).forEach(a => {
-    a.addEventListener('click', () => {
-      mobile.classList.add('hidden');
-      toggle.setAttribute('aria-expanded', 'false');
-      toggle.innerHTML = '<i class="fas fa-bars text-sm"></i>';
-    });
+  toggle.addEventListener('click', () => setMenu(!mobile.classList.contains('open')));
+  $$('a', mobile).forEach(a => a.addEventListener('click', () => setMenu(false)));
+
+  // Close on Escape, and if the viewport grows past the mobile breakpoint
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && mobile.classList.contains('open')) setMenu(false);
+  });
+  window.matchMedia('(min-width: 768px)').addEventListener('change', e => {
+    if (e.matches) setMenu(false);
   });
 
   // Highlight the nav link for whichever section is in view
@@ -358,6 +361,52 @@ function initNav () {
   }, { threshold: 0.4 });
 
   $$('section[id]').forEach(section => io.observe(section));
+}
+
+/* ─── SCROLL CHOREOGRAPHY ──────────────────────── */
+
+/**
+ * Progress bar + hero parallax, both driven from a single rAF-throttled
+ * scroll listener so we never do layout work more than once a frame.
+ */
+function initScrollFX () {
+  const bar = $('#scroll-progress');
+  // Target the <img>, not #hero-photo: that wrapper is a .reveal, and writing
+  // inline transform/opacity onto it would override its entrance animation.
+  const photo = $('#hero-photo img');
+  const hero  = $('#hero');
+  const reduce = prefersReducedMotion();
+
+  let ticking = false;
+
+  const update = () => {
+    ticking = false;
+    const y = window.scrollY;
+
+    if (bar) {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const p = max > 0 ? Math.min(y / max, 1) : 0;
+      bar.style.transform = `scaleX(${p})`;
+    }
+
+    // Drift the cut-out and fade the hero as it leaves — desktop only, since
+    // on phones the photo sits inline above the name and shifting it looks broken.
+    if (photo && hero && !reduce && window.innerWidth >= 1024) {
+      const h = hero.offsetHeight;
+      const p = Math.min(y / h, 1);
+      photo.style.transform = `translate3d(0, ${p * -40}px, 0)`;
+      photo.style.opacity = String(1 - p * 0.55);
+    }
+  };
+
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(update);
+  }, { passive: true });
+
+  window.addEventListener('resize', update, { passive: true });
+  update();
 }
 
 /* ─── TYPED HEADLINE ───────────────────────────── */
@@ -391,7 +440,11 @@ function initTyped () {
 /* ─── SCROLL REVEAL ────────────────────────────── */
 
 function initReveal () {
-  observeOnce($$('.reveal'), el => el.classList.add('visible'), { threshold: 0.1 });
+  observeOnce($$('.reveal'), el => {
+    el.classList.add('visible');
+    // Release the compositor layer once the transition has run
+    el.addEventListener('transitionend', () => el.classList.add('done'), { once: true });
+  }, { threshold: 0.1, rootMargin: '0px 0px -8% 0px' });
 }
 
 /* ─── SKILLS ───────────────────────────────────── */
@@ -431,7 +484,7 @@ function buildProjectCards () {
   if (!grid) return;
 
   grid.innerHTML = PROJECTS.map((p, i) => `
-    <article class="project-card reveal ${['', 'reveal-d1', 'reveal-d2'][i % 3]}" data-id="${p.id}" data-category="${p.category}">
+    <article class="project-card reveal" style="--i:${i % 3}" data-id="${p.id}" data-category="${p.category}">
       <button class="group surface surface-hover flex h-full w-full flex-col overflow-hidden text-left"
               aria-label="View details for ${esc(p.title)}">
 
@@ -568,7 +621,7 @@ function initModal () {
 
 /* ─── TIMELINE ─────────────────────────────────── */
 
-function timelineItemHTML (item) {
+function timelineItemHTML (item, i) {
   const dot = item.highlight
     ? 'border-gold-500/40 bg-gold-500/10 text-gold-400'
     : 'border-ink-50/10 bg-ink-800 text-accent-400';
@@ -578,7 +631,7 @@ function timelineItemHTML (item) {
     : '';
 
   return `
-    <li class="timeline-item reveal relative pl-10 pb-10 last:pb-0">
+    <li class="timeline-item reveal relative pl-10 pb-10 last:pb-0" style="--i:${Math.min(i, 3)}">
       <span class="absolute left-0 top-1 flex h-7 w-7 items-center justify-center rounded-full border ${dot}">
         <i class="fas fa-${item.highlight ? 'trophy' : 'circle'} text-[9px]"></i>
       </span>
@@ -708,6 +761,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildTimelines();
 
   initNav();
+  initScrollFX();
   initTyped();
   initFilter();
   initModal();

@@ -32,6 +32,9 @@
   Skip to content
 </a>
 
+<!-- Scroll progress — width driven by main.js -->
+<div id="scroll-progress" class="scroll-progress" aria-hidden="true"></div>
+
 <!-- ===================== AMBIENT BACKGROUND ===================== -->
 <div class="pointer-events-none fixed inset-0 -z-10" aria-hidden="true">
   <div class="bg-grid mask-fade-b absolute inset-0 h-[70vh]"></div>
@@ -71,12 +74,15 @@
   </div>
 
   <!-- Mobile nav -->
-  <div id="mobile-nav" class="hidden border-t border-ink-50/7 bg-ink-950/95 backdrop-blur-lg md:hidden">
-    <div class="container-page flex flex-col gap-1 py-4">
-      <a href="#about"      class="rounded-lg px-3 py-3 text-sm text-ink-200 hover:bg-ink-50/5">About</a>
-      <a href="#projects"   class="rounded-lg px-3 py-3 text-sm text-ink-200 hover:bg-ink-50/5">Projects</a>
-      <a href="#experience" class="rounded-lg px-3 py-3 text-sm text-ink-200 hover:bg-ink-50/5">Experience</a>
-      <a href="#contact"    class="rounded-lg px-3 py-3 text-sm text-ink-200 hover:bg-ink-50/5">Contact</a>
+  <div id="mobile-nav" class="mobile-nav">
+    <div>
+      <div class="container-page flex flex-col gap-0.5 border-t border-ink-50/7 bg-ink-950/95 py-4 backdrop-blur-lg">
+        <a href="#about"      class="mobile-nav-link" style="--i:0">About</a>
+        <a href="#projects"   class="mobile-nav-link" style="--i:1">Projects</a>
+        <a href="#experience" class="mobile-nav-link" style="--i:2">Experience</a>
+        <a href="#contact"    class="mobile-nav-link" style="--i:3">Contact</a>
+        <a href="#contact" class="btn btn-primary mt-3">Get in touch</a>
+      </div>
     </div>
   </div>
 </header>
@@ -84,13 +90,13 @@
 <main id="main">
 
 <!-- ===================== HERO ===================== -->
-<section id="hero" class="relative flex min-h-screen items-center pt-28 pb-20">
+<section id="hero" class="relative flex min-h-screen items-center pt-24 pb-16 lg:pt-28 lg:pb-20">
   <div class="container-page">
-    <div class="grid items-center gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
+    <div class="grid items-center gap-7 text-center lg:grid-cols-[1.15fr_0.85fr] lg:gap-20 lg:text-left">
 
       <!-- Text -->
       <div class="order-2 lg:order-1">
-        <div class="reveal inline-flex items-center gap-2 rounded-full border border-ink-50/9 bg-ink-50/3 px-3 py-1.5">
+        <div class="reveal inline-flex items-center gap-2 rounded-full border border-ink-50/9 bg-ink-50/3 px-3 py-1.5 backdrop-blur-sm">
           <span class="relative flex h-1.5 w-1.5">
             <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
             <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
@@ -98,22 +104,21 @@
           <span class="font-mono text-[11px] tracking-wide text-ink-300">Open to work</span>
         </div>
 
-        <h1 class="reveal reveal-d1 mt-7 text-display font-semibold text-ink-50">
+        <h1 class="reveal reveal-d1 mt-6 text-display font-semibold text-balance text-ink-50 lg:mt-7">
           Clyde Dominick<br />
           <span class="text-gradient">Morales</span>
         </h1>
 
-        <p class="reveal reveal-d1 mt-5 font-mono text-sm text-accent-300 md:text-base">
+        <p class="reveal reveal-d1 mt-4 font-mono text-sm text-accent-300 md:text-base lg:mt-5">
           <span id="typed" aria-live="polite"></span>
         </p>
 
-        <p class="reveal reveal-d2 mt-6 max-w-xl text-base leading-relaxed text-ink-300 md:text-[17px]">
-          Computer Science graduate from Mariano Marcos State University. I build
-          web apps, mobile apps, and AI systems — from an award-winning healthcare
-          recommender to distributed systems tooling.
+        <p class="reveal reveal-d2 mx-auto mt-5 max-w-xl text-pretty text-[15px] leading-relaxed text-ink-300 md:text-[17px] lg:mx-0 lg:mt-6">
+          Computer Science graduate from Mariano Marcos State University.
+          I build web apps, mobile apps, and AI systems.
         </p>
 
-        <div class="reveal reveal-d2 mt-9 flex flex-wrap gap-3">
+        <div class="reveal reveal-d2 mt-8 flex flex-wrap justify-center gap-3 lg:mt-9 lg:justify-start">
           <a href="#projects" class="btn btn-primary">
             View projects <i class="fas fa-arrow-right text-xs"></i>
           </a>
@@ -121,7 +126,7 @@
         </div>
 
         <!-- Stats -->
-        <dl class="reveal reveal-d3 mt-14 grid max-w-lg grid-cols-3 gap-6 border-t border-ink-50/7 pt-8">
+        <dl class="reveal reveal-d3 mx-auto mt-10 grid max-w-lg grid-cols-3 gap-4 border-t border-ink-50/7 pt-7 sm:gap-6 lg:mx-0 lg:mt-14 lg:pt-8">
           <div>
             <dt class="sr-only">Years coding</dt>
             <dd>
@@ -148,13 +153,14 @@
 
       <!-- Portrait — transparent cut-out, so it floats on the background rather than
            sitting in a card. Small and above the name on phones; right column on desktop. -->
-      <div class="reveal reveal-d2 relative order-1 w-28 lg:order-2 lg:w-full lg:max-w-xs lg:justify-self-end">
-        <div class="absolute bottom-0 left-1/2 -z-10 h-3/4 w-4/5 -translate-x-1/2 rounded-full bg-accent-500/15 blur-3xl" aria-hidden="true"></div>
+      <div id="hero-photo" class="reveal reveal-d1 relative order-1 mx-auto w-28 sm:w-36 lg:order-2 lg:mx-0 lg:w-full lg:max-w-xs lg:justify-self-end">
+        <div class="absolute bottom-0 left-1/2 -z-10 h-4/5 w-4/5 -translate-x-1/2 rounded-full bg-accent-500/20 blur-3xl" aria-hidden="true"></div>
         <img
           src="image/portfolio-pic.png"
           alt="Clyde Dominick S. Morales"
           class="w-full object-contain drop-shadow-2xl"
           width="201" height="383"
+          fetchpriority="high"
         />
       </div>
 
@@ -163,7 +169,7 @@
 </section>
 
 <!-- ===================== ABOUT ===================== -->
-<section id="about" class="border-t border-ink-50/7 py-24 md:py-32">
+<section id="about" class="border-t border-ink-50/7 py-20 md:py-32">
   <div class="container-page">
     <div class="reveal max-w-2xl">
       <span class="eyebrow">About</span>
@@ -221,7 +227,7 @@
 </section>
 
 <!-- ===================== PROJECTS ===================== -->
-<section id="projects" class="border-t border-ink-50/7 py-24 md:py-32">
+<section id="projects" class="border-t border-ink-50/7 py-20 md:py-32">
   <div class="container-page">
     <div class="reveal flex flex-wrap items-end justify-between gap-6">
       <div class="max-w-2xl">
@@ -249,7 +255,7 @@
 </section>
 
 <!-- ===================== EXPERIENCE ===================== -->
-<section id="experience" class="border-t border-ink-50/7 py-24 md:py-32">
+<section id="experience" class="border-t border-ink-50/7 py-20 md:py-32">
   <div class="container-page">
     <div class="reveal max-w-2xl">
       <span class="eyebrow">Experience</span>
@@ -271,7 +277,7 @@
 </section>
 
 <!-- ===================== CONTACT ===================== -->
-<section id="contact" class="border-t border-ink-50/7 py-24 md:py-32">
+<section id="contact" class="border-t border-ink-50/7 py-20 md:py-32">
   <div class="container-page">
     <div class="reveal max-w-2xl">
       <span class="eyebrow">Contact</span>

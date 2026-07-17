@@ -191,6 +191,40 @@
     @apply bg-ink-50/7 text-ink-50;
   }
 
+  /* --- Scroll progress bar --- */
+  .scroll-progress {
+    @apply fixed inset-x-0 top-0 z-60 h-0.5 origin-left
+           bg-linear-to-r from-accent-600 via-accent-400 to-accent-300;
+    transform: scaleX(0);
+  }
+
+  /* --- Mobile nav ---
+     grid-template-rows 0fr -> 1fr animates to the panel's natural height,
+     which plain height:auto can't transition. */
+  .mobile-nav {
+    @apply grid grid-rows-[0fr] overflow-hidden md:hidden;
+    transition: grid-template-rows 0.4s var(--ease-out-quint);
+  }
+  .mobile-nav.open {
+    grid-template-rows: 1fr;
+  }
+  .mobile-nav > div { @apply min-h-0; }
+
+  .mobile-nav-link {
+    @apply rounded-lg px-3 py-3.5 text-[15px] text-ink-200
+           transition-colors duration-200;
+    /* Links slide in behind the panel as it opens */
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: opacity 0.35s ease, transform 0.35s ease, background-color 0.2s;
+  }
+  .mobile-nav.open .mobile-nav-link {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(80ms + var(--i, 0) * 45ms);
+  }
+  .mobile-nav-link:active { @apply bg-ink-50/7; }
+
   /* --- Nav links --- */
   .nav-link {
     @apply relative py-1 text-sm text-ink-300 transition-colors duration-200;
@@ -233,22 +267,50 @@
     mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
   }
 
-  /* Scroll reveal — .reveal is observed by main.js */
+  /* Scroll reveal — .reveal is observed by main.js.
+     Elements focus in: rise, settle, and sharpen. Stagger comes from --i,
+     set either by .reveal-dN below or inline by JS on generated lists. */
   .reveal {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(26px) scale(0.985);
+    filter: blur(5px);
     transition:
-      opacity 0.7s var(--ease-out-quint),
-      transform 0.7s var(--ease-out-quint);
-    will-change: opacity, transform;
+      opacity 0.75s var(--ease-out-quint),
+      transform 0.75s var(--ease-out-quint),
+      filter 0.75s var(--ease-out-quint);
+    transition-delay: calc(var(--i, 0) * 70ms);
+    will-change: opacity, transform, filter;
   }
   .reveal.visible {
     opacity: 1;
     transform: none;
+    filter: none;
   }
-  .reveal-d1 { transition-delay: 0.08s; }
-  .reveal-d2 { transition-delay: 0.16s; }
-  .reveal-d3 { transition-delay: 0.24s; }
+  /* Once revealed, stop reserving a compositor layer */
+  .reveal.done { will-change: auto; }
+
+  .reveal-d1 { --i: 1; }
+  .reveal-d2 { --i: 2; }
+  .reveal-d3 { --i: 3; }
+}
+
+/* =============================================
+   SHORT VIEWPORTS
+   iPhone SE and similar (<=700px tall) can't fit the full hero stack, which
+   pushes the primary CTA below the fold. Tighten the photo and spacing there
+   rather than shrinking it for every phone.
+   ============================================= */
+@media (max-height: 700px) and (max-width: 1023px) {
+  #hero {
+    padding-top: 5rem;
+    padding-bottom: 2.5rem;
+  }
+  #hero > div > div {
+    gap: 1.25rem;
+  }
+  #hero-photo {
+    width: 4.5rem;
+  }
 }
 
 /* =============================================
@@ -269,5 +331,8 @@
   .reveal {
     opacity: 1;
     transform: none;
+    filter: none;
   }
+
+  .mobile-nav.open .mobile-nav-link { opacity: 1; transform: none; }
 }
