@@ -3,15 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Clyde Dominick S. Morales — Computer Science student and software engineer building web, mobile, and AI systems." />
+  <meta name="description" content="Clyde Dominick S. Morales — Computer Science graduate and software engineer building web, mobile, and AI systems." />
   <meta name="theme-color" content="#08080A" />
   <title>Clyde Dominick S. Morales — Software Engineer</title>
 
   <!-- Open Graph -->
   <meta property="og:title" content="Clyde Dominick S. Morales — Software Engineer" />
-  <meta property="og:description" content="CS student at MMSU building web, mobile, and AI systems. Best in Thesis 2026." />
+  <meta property="og:description" content="Computer Science graduate from MMSU building web, mobile, and AI systems. Best in Thesis 2026." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="image/picture.jpg" />
+  <meta property="og:url" content="https://clyde-portfolio.vercel.app/" />
+  <!-- Absolute URL required: social crawlers can't resolve relative paths.
+       Uses the headshot — the transparent cut-out renders poorly on link previews. -->
+  <meta property="og:image" content="https://clyde-portfolio.vercel.app/image/picture.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 
@@ -82,16 +86,16 @@
 <!-- ===================== HERO ===================== -->
 <section id="hero" class="relative flex min-h-screen items-center pt-28 pb-20">
   <div class="container-page">
-    <div class="grid items-center gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
+    <div class="grid items-center gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-20">
 
       <!-- Text -->
-      <div>
+      <div class="order-2 lg:order-1">
         <div class="reveal inline-flex items-center gap-2 rounded-full border border-ink-50/9 bg-ink-50/3 px-3 py-1.5">
           <span class="relative flex h-1.5 w-1.5">
             <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
             <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
           </span>
-          <span class="font-mono text-[11px] tracking-wide text-ink-300">Open to internships</span>
+          <span class="font-mono text-[11px] tracking-wide text-ink-300">Open to work</span>
         </div>
 
         <h1 class="reveal reveal-d1 mt-7 text-display font-semibold text-ink-50">
@@ -104,7 +108,7 @@
         </p>
 
         <p class="reveal reveal-d2 mt-6 max-w-xl text-base leading-relaxed text-ink-300 md:text-[17px]">
-          Computer Science student at Mariano Marcos State University. I build
+          Computer Science graduate from Mariano Marcos State University. I build
           web apps, mobile apps, and AI systems — from an award-winning healthcare
           recommender to distributed systems tooling.
         </p>
@@ -142,21 +146,16 @@
         </dl>
       </div>
 
-      <!-- Portrait -->
-      <div class="reveal reveal-d2 relative mx-auto w-full max-w-sm lg:mx-0">
-        <div class="absolute -inset-4 rounded-3xl bg-accent-500/10 blur-3xl" aria-hidden="true"></div>
-        <div class="surface relative overflow-hidden p-2">
-          <img
-            src="image/picture.jpg"
-            alt="Portrait of Clyde Dominick S. Morales"
-            class="aspect-4/5 w-full rounded-lg object-cover"
-            width="400" height="500"
-          />
-          <div class="flex items-center justify-between px-3 py-3">
-            <span class="font-mono text-[11px] text-ink-400">Batac City, PH</span>
-            <span class="font-mono text-[11px] text-ink-400">BS Computer Science</span>
-          </div>
-        </div>
+      <!-- Portrait — transparent cut-out, so it floats on the background rather than
+           sitting in a card. Small and above the name on phones; right column on desktop. -->
+      <div class="reveal reveal-d2 relative order-1 w-28 lg:order-2 lg:w-full lg:max-w-xs lg:justify-self-end">
+        <div class="absolute bottom-0 left-1/2 -z-10 h-3/4 w-4/5 -translate-x-1/2 rounded-full bg-accent-500/15 blur-3xl" aria-hidden="true"></div>
+        <img
+          src="image/portfolio-pic.png"
+          alt="Clyde Dominick S. Morales"
+          class="w-full object-contain drop-shadow-2xl"
+          width="201" height="383"
+        />
       </div>
 
     </div>
@@ -178,7 +177,7 @@
       <!-- Bio -->
       <div class="reveal reveal-d1 space-y-5 text-[15px] leading-relaxed text-ink-300">
         <p>
-          I'm a Computer Science student at Mariano Marcos State University in Batac City,
+          I'm a Computer Science graduate from Mariano Marcos State University in Batac City,
           Ilocos Norte, and an Academic Achiever across two semesters. I care about
           software that reaches people who need it.
         </p>
@@ -190,7 +189,7 @@
           Bioinformatics Technology.
         </p>
         <p>
-          I'm currently open to internships and collaborative projects.
+          I'm currently open to full-time roles and collaborative projects.
         </p>
 
         <div class="flex flex-wrap gap-3 pt-3">

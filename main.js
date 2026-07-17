@@ -188,10 +188,10 @@ const TECH = [
 const TIMELINE = {
   education: [
     {
-      period: '2022 — Present',
+      period: '2022 — 2026',
       title: 'BS Computer Science',
       org: 'Mariano Marcos State University · Batac City, Ilocos Norte',
-      desc: 'Academic Achiever (A.Y 2023–2024 2nd Sem · A.Y 2025–2026 1st Sem). Focused on software development, data structures, AI/ML, cybersecurity, and systems programming.',
+      desc: 'Graduated 2026. Academic Achiever (A.Y 2023–2024 2nd Sem · A.Y 2025–2026 1st Sem). Focused on software development, data structures, AI/ML, cybersecurity, and systems programming.',
       tags: ['Data Structures', 'Web Development', 'AI / ML', 'Cybersecurity'],
     },
     {
@@ -370,7 +370,7 @@ function initTyped () {
     'Software Engineer',
     'Full Stack Developer',
     'Cybersecurity Enthusiast',
-    'CS Student @ MMSU',
+    'CS Graduate @ MMSU',
   ];
 
   // Typed.js loads via CDN and animates — skip both if unavailable or unwanted
