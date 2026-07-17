@@ -1,0 +1,17 @@
+{
+  "name": "portfolio",
+  "version": "2.0.0",
+  "description": "Personal portfolio — Clyde Dominick S. Morales",
+  "private": true,
+  "scripts": {
+    "dev": "tailwindcss -i ./src/input.css -o ./styles.css --watch",
+    "build": "tailwindcss -i ./src/input.css -o ./styles.css --minify",
+    "serve": "npx --yes serve . -l 5173"
+  },
+  "author": "Clyde Dominick S. Morales",
+  "license": "MIT",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}
