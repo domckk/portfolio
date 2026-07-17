@@ -195,10 +195,15 @@
      Desktop only: the phone photo is ~112px wide, and chips around it would
      collide with the name. */
   .float-chip {
-    @apply absolute z-10 hidden items-center gap-2 rounded-lg
-           border border-ink-50/10 bg-ink-900/80 px-3 py-2
-           shadow-lg shadow-ink-950/50 backdrop-blur-md lg:flex;
+    @apply absolute z-10 flex items-center gap-1.5 rounded-lg
+           border border-ink-50/10 bg-ink-900/80 px-2.5 py-1.5
+           shadow-lg shadow-ink-950/50 backdrop-blur-md
+           lg:gap-2 lg:px-3 lg:py-2;
     animation: float-y 6s ease-in-out infinite;
+  }
+  /* Very short viewports have no vertical room for chips beside the photo */
+  @media (max-height: 700px) and (max-width: 1023px) {
+    .float-chip { display: none; }
   }
 
   /* --- Scroll progress bar --- */
