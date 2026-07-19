@@ -171,18 +171,61 @@ const PROJECTS = [
   },
 ];
 
-const SKILLS = [
-  { name: 'JavaScript / TypeScript', level: 88 },
-  { name: 'React / React Native / Next.js', level: 84 },
-  { name: 'Python', level: 85 },
-  { name: 'C / C++', level: 80 },
-  { name: 'PostgreSQL / MySQL / Redis', level: 78 },
-  { name: 'Cybersecurity', level: 75 },
-];
-
-const TECH = [
-  'React', 'React Native', 'Next.js', 'Node.js', 'Python', 'Flutter',
-  'JavaScript', 'FastAPI', 'C / C++', 'PostgreSQL', 'HTML / CSS', 'Security',
+/* Skills grouped by domain rather than scored out of 100 — proficiency
+   percentages are self-assigned and unverifiable. `primary` marks the tools
+   actually reached for in the projects below, which is the honest signal. */
+const SKILL_GROUPS = [
+  {
+    label: 'Languages',
+    items: [
+      { name: 'JavaScript', primary: true },
+      { name: 'TypeScript', primary: true },
+      { name: 'Python', primary: true },
+      { name: 'C / C++' },
+      { name: 'SQL' },
+    ],
+  },
+  {
+    label: 'Frontend & Mobile',
+    items: [
+      { name: 'React', primary: true },
+      { name: 'React Native', primary: true },
+      { name: 'Next.js' },
+      { name: 'HTML / CSS' },
+      { name: 'Tailwind CSS' },
+      { name: 'Flutter' },
+    ],
+  },
+  {
+    label: 'Backend & Data',
+    items: [
+      { name: 'FastAPI', primary: true },
+      { name: 'Node.js' },
+      { name: 'PostgreSQL', primary: true },
+      { name: 'MySQL' },
+      { name: 'Redis' },
+      { name: 'REST APIs' },
+    ],
+  },
+  {
+    label: 'AI / ML',
+    items: [
+      { name: 'spaCy' },
+      { name: 'Rasa NLU' },
+      { name: 'scikit-learn' },
+      { name: 'Data Analytics' },
+    ],
+  },
+  {
+    label: 'Tools & Practices',
+    items: [
+      { name: 'Git / GitHub', primary: true },
+      { name: 'Supabase' },
+      { name: 'Firebase' },
+      { name: 'Expo' },
+      { name: 'Figma' },
+    ],
+  },
 ];
 
 const TIMELINE = {
@@ -453,28 +496,18 @@ function buildSkills () {
   const list = $('#skills-list');
   if (!list) return;
 
-  list.innerHTML = SKILLS.map(skill => `
-    <div>
-      <div class="mb-2 flex items-baseline justify-between gap-4">
-        <span class="text-sm text-ink-200">${esc(skill.name)}</span>
-        <span class="font-mono text-xs text-ink-400">${skill.level}%</span>
-      </div>
-      <div class="h-1 w-full overflow-hidden rounded-full bg-ink-50/7">
-        <div class="skill-fill h-full w-0 rounded-full bg-linear-to-r from-accent-600 to-accent-400 transition-[width] duration-1000 ease-out"
-             data-level="${skill.level}"></div>
+  list.innerHTML = SKILL_GROUPS.map((group, gi) => `
+    <div class="reveal" style="--i:${gi}">
+      <h4 class="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-400">${esc(group.label)}</h4>
+      <div class="mt-3 flex flex-wrap gap-1.5">
+        ${group.items.map(item => `
+          <span class="${item.primary ? 'tag-primary' : 'tag'}">${esc(item.name)}</span>
+        `).join('')}
       </div>
     </div>
   `).join('');
 
-  observeOnce($$('.skill-fill', list), el => {
-    el.style.width = `${el.dataset.level}%`;
-  }, { threshold: 0.3 });
-}
-
-function buildTech () {
-  const list = $('#tech-list');
-  if (!list) return;
-  list.innerHTML = TECH.map(t => `<span class="tag">${esc(t)}</span>`).join('');
+  observeOnce($$('.reveal', list), el => el.classList.add('visible'), { threshold: 0.15 });
 }
 
 /* ─── PROJECTS ─────────────────────────────────── */
@@ -756,7 +789,6 @@ function initContactForm () {
 
 document.addEventListener('DOMContentLoaded', () => {
   buildSkills();
-  buildTech();
   buildProjectCards();
   buildTimelines();
 

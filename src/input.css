@@ -159,6 +159,13 @@
            font-mono text-[11px] tracking-tight text-ink-300;
   }
 
+  /* Tools reached for day to day — accent-tinted instead of a percentage */
+  .tag-primary {
+    @apply inline-flex items-center rounded-md border border-accent-500/35
+           bg-accent-500/10 px-2.5 py-1
+           font-mono text-[11px] tracking-tight text-accent-300;
+  }
+
   /* --- Form controls --- */
   .field {
     @apply w-full rounded-lg border border-ink-50/9 bg-ink-950/60
