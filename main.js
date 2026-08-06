@@ -322,7 +322,9 @@ function plateHTML (p, i, big = false) {
 
 let lenis = null;
 
-function initMotion () {
+/* Register GSAP + start Lenis. Must run BEFORE any ScrollTrigger is created
+   (gallery pin, reveals) so the plugin is available and scroll stays synced. */
+function initCore () {
   const canGsap = typeof gsap !== 'undefined';
   if (canGsap && typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
 
@@ -345,12 +347,11 @@ function initMotion () {
       requestAnimationFrame(raf);
     }
   }
-
-  buildReveals(canGsap);
 }
 
 /* Line masks + fade-rise reveals, driven by ScrollTrigger (or IO fallback). */
-function buildReveals (canGsap) {
+function buildReveals () {
+  const canGsap = typeof gsap !== 'undefined';
   if (reduce()) {
     $$('.reveal, .ln').forEach(el => el.classList.add('is-in'));
     return;
@@ -504,7 +505,7 @@ function initCursor () {
     label.textContent = text;
   };
   document.addEventListener('mouseover', e => {
-    const project = e.target.closest('.index__btn');
+    const project = e.target.closest('.panel__btn');
     const link = e.target.closest('[data-cursor]');
     if (project) setState(true, 'View');
     else if (link) setState(true, '');
@@ -512,63 +513,111 @@ function initCursor () {
   });
 }
 
-/* ─── WORK INDEX ───────────────────────────────────────────────────────── */
+/* ─── WORK · HORIZONTAL EXHIBITION ─────────────────────────────────────── */
+
+/* Recompute gallery geometry after a filter changes what's visible.
+   Assigned by initGallery so initFilter can call it regardless of mode. */
+let refreshGallery = () => {};
 
 function buildWork () {
-  const list = $('#work-index');
-  if (!list) return;
+  const track = $('#gallery-track');
+  if (!track) return;
 
-  list.innerHTML = PROJECTS.map((p, i) => `
-    <li class="index__row" data-id="${p.id}" data-category="${p.category}">
-      <button class="index__btn" aria-label="View ${esc(p.title)}">
-        <span class="index__no">${num(i + 1)}</span>
-        <span class="index__main">
-          <span class="index__title">${esc(p.title)}</span>
-          <span class="index__desc">${esc(p.description)}</span>
-        </span>
-        <span class="index__aside">
-          ${p.award ? `<span class="index__award">Award</span>` : ''}
-          <span class="index__tags">${p.tags.slice(0, 2).map(t => `<span>${esc(t)}</span>`).join('')}</span>
-          <span class="index__year">${esc(p.year)}</span>
-          <span class="index__go" aria-hidden="true">→</span>
-        </span>
+  track.innerHTML = PROJECTS.map((p, i) => `
+    <li class="panel" data-id="${p.id}" data-category="${p.category}">
+      <button class="panel__btn" aria-label="View ${esc(p.title)}">
+        <div class="panel__plate">
+          ${p.award ? `<span class="panel__award">Award</span>` : ''}
+          ${plateHTML(p, i)}
+        </div>
+        <div class="panel__body">
+          <div class="panel__top"><span>${num(i + 1)}</span><span>${esc(p.year)}</span></div>
+          <h3 class="panel__title">${esc(p.title)}</h3>
+          <p class="panel__role">${esc(p.role)}</p>
+          <p class="panel__desc">${esc(p.description)}</p>
+          <div class="panel__tags">${p.tags.slice(0, 4).map(t => `<span>${esc(t)}</span>`).join('')}</div>
+          <span class="panel__cta">View project <span aria-hidden="true">→</span></span>
+        </div>
       </button>
     </li>
   `).join('');
 
-  $$('.index__row', list).forEach(row =>
-    $('.index__btn', row).addEventListener('click', () => openModal(row.dataset.id)));
+  $$('.panel', track).forEach(panel =>
+    $('.panel__btn', panel).addEventListener('click', () => openModal(panel.dataset.id)));
 
-  initPreview();
+  const total = $('#gallery-total');
+  if (total) total.textContent = num(PROJECTS.length);
+
+  initGallery();
 }
 
-/* Floating preview plate that follows the cursor on desktop hover. */
-function initPreview () {
-  const preview = $('#work-preview');
-  if (!preview || isTouch() || reduce()) return;
+/* Pinned + scrubbed horizontal scroll on desktop; native scroll-snap on touch
+   / reduced-motion. Both drive the same counter + progress-bar HUD. */
+function initGallery () {
+  const gallery = $('#gallery');
+  const track   = $('#gallery-track');
+  const fill    = $('#gallery-fill');
+  const curEl   = $('#gallery-cur');
+  const totalEl = $('#gallery-total');
+  if (!gallery || !track) return;
 
-  let px = 0, py = 0, cx = 0, cy = 0, raf = null;
-  const loop = () => {
-    cx += (px - cx) * 0.14;
-    cy += (py - cy) * 0.14;
-    preview.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
-    raf = requestAnimationFrame(loop);
+  const visibleCount = () => $$('.panel', track).filter(p => !p.classList.contains('is-hidden')).length;
+
+  const updateHUD = progress => {
+    const n = Math.max(1, visibleCount());
+    if (fill) fill.style.transform = `scaleX(${progress})`;
+    if (curEl) curEl.textContent = num(Math.min(n, Math.round(progress * (n - 1)) + 1));
   };
+  const setTotal = () => { if (totalEl) totalEl.textContent = num(visibleCount()); };
 
-  $$('.index__row').forEach(row => {
-    const p = PROJECTS.find(x => x.id === row.dataset.id);
-    const i = PROJECTS.indexOf(p);
-    row.addEventListener('mouseenter', () => {
-      preview.innerHTML = plateHTML(p, i);
-      preview.classList.add('is-visible');
-      if (!raf) raf = requestAnimationFrame(loop);
-    });
-    row.addEventListener('mouseleave', () => {
-      preview.classList.remove('is-visible');
-    });
-  });
+  const usePin = !isTouch() && !reduce() &&
+                 typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
 
-  window.addEventListener('mousemove', e => { px = e.clientX + 120; py = e.clientY; }, { passive: true });
+  if (usePin) {
+    gallery.classList.add('is-pinned');
+    const amount = () => Math.max(1, track.scrollWidth - window.innerWidth);
+
+    const tween = gsap.to(track, {
+      x: () => -(amount()),
+      ease: 'none',
+      scrollTrigger: {
+        trigger: gallery,
+        start: 'top top',
+        end: () => '+=' + amount(),
+        pin: true,
+        scrub: 1,
+        invalidateOnRefresh: true,
+        onUpdate: self => updateHUD(self.progress),
+      },
+    });
+
+    // Keyboard access: focusing an off-screen panel drives the pin so it
+    // scrolls into view (otherwise scroll-jacking would trap Tab navigation).
+    const st = tween.scrollTrigger;
+    track.addEventListener('focusin', e => {
+      const panel = e.target.closest('.panel');
+      if (!panel) return;
+      const vis = $$('.panel', track).filter(p => !p.classList.contains('is-hidden'));
+      const idx = vis.indexOf(panel);
+      if (idx < 0) return;
+      const p = vis.length > 1 ? idx / (vis.length - 1) : 0;
+      const y = st.start + p * (st.end - st.start);
+      if (lenis) lenis.scrollTo(y);
+      else window.scrollTo({ top: y });
+    });
+
+    refreshGallery = () => { setTotal(); ScrollTrigger.refresh(); };
+  } else {
+    // Native horizontal scroll — drive the HUD from scrollLeft.
+    const onScroll = () => {
+      const max = gallery.scrollWidth - gallery.clientWidth;
+      updateHUD(max > 0 ? gallery.scrollLeft / max : 0);
+    };
+    gallery.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    refreshGallery = () => { setTotal(); gallery.scrollTo({ left: 0 }); onScroll(); };
+  }
 }
 
 function initFilter () {
@@ -581,10 +630,10 @@ function initFilter () {
         b.setAttribute('aria-selected', String(on));
       });
       const filter = btn.dataset.filter;
-      $$('.index__row').forEach(row => {
-        row.classList.toggle('is-hidden', !(filter === 'all' || row.dataset.category === filter));
+      $$('.panel').forEach(panel => {
+        panel.classList.toggle('is-hidden', !(filter === 'all' || panel.dataset.category === filter));
       });
-      if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
+      refreshGallery();
     });
   });
 }
@@ -771,11 +820,13 @@ function initContactForm () {
 /* ─── INIT ─────────────────────────────────────────────────────────────── */
 
 document.addEventListener('DOMContentLoaded', () => {
-  buildWork();
+  initCore();        // GSAP plugin + Lenis — must precede any ScrollTrigger
+
+  buildWork();       // builds panels + pins the horizontal gallery
   buildSkills();
   buildLedgers();
 
-  initMotion();      // Lenis + GSAP + reveals
+  buildReveals();    // reveals after all DOM (incl. skills) exists
   initNav();
   initProgress();
   initCursor();
@@ -784,4 +835,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTabs();
   initCounters();
   initContactForm();
+
+  // Everything is placed — recompute pinned/scroll positions once.
+  if (typeof ScrollTrigger !== 'undefined') requestAnimationFrame(() => ScrollTrigger.refresh());
 });

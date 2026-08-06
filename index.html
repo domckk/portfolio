@@ -180,9 +180,9 @@
     </div>
   </section>
 
-  <!-- ===================== WORK (inverted) ===================== -->
-  <section id="work" class="work section section--dark" aria-labelledby="work-title">
-    <div class="wrap">
+  <!-- ===================== WORK (inverted · horizontal exhibition) ======= -->
+  <section id="work" class="work section--dark" aria-labelledby="work-title">
+    <div class="wrap work__head">
       <div class="sec-head sec-head--split">
         <div>
           <span class="sec-no">02</span>
@@ -192,8 +192,8 @@
           </h2>
         </div>
         <p class="sec-note reveal">
-          School and personal projects across AI, web development, security, and
-          systems programming — a curated index.
+          A curated exhibition across AI, web development, security, and systems
+          programming. <span class="work__hint">Scroll to move through the gallery →</span>
         </p>
       </div>
 
@@ -205,12 +205,15 @@
         <button class="filter"           data-filter="security"   role="tab" aria-selected="false" data-cursor>Security</button>
         <button class="filter"           data-filter="systems"    role="tab" aria-selected="false" data-cursor>Systems</button>
       </div>
+    </div>
 
-      <!-- Exhibition index — rows injected by main.js -->
-      <ol id="work-index" class="index"></ol>
-
-      <!-- Floating preview plate (desktop hover) -->
-      <div id="work-preview" class="preview" aria-hidden="true"></div>
+    <!-- Horizontal gallery — pinned + scrubbed on desktop, native swipe on touch -->
+    <div class="gallery" id="gallery">
+      <ol class="gallery__track" id="gallery-track"></ol>
+      <div class="gallery__foot" aria-hidden="true">
+        <span class="gallery__count"><em id="gallery-cur">01</em> / <span id="gallery-total">08</span></span>
+        <span class="gallery__bar"><span id="gallery-fill" class="gallery__fill"></span></span>
+      </div>
     </div>
   </section>
 
