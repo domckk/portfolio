@@ -1064,6 +1064,7 @@ body.menu-open .menu__link { opacity: 1; transform: none; }
   color: var(--line);
 }
 .modal__plate {
+  position: relative;                /* contain the absolutely-placed .preview__inner */
   flex: 1;
   aspect-ratio: 16 / 9;
   background: var(--ink-bg);
