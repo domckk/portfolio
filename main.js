@@ -566,14 +566,20 @@ function initGallery () {
   const totalEl = $('#gallery-total');
   if (!gallery || !track) return;
 
-  const visibleCount = () => $$('.panel', track).filter(p => !p.classList.contains('is-hidden')).length;
+  // Count is cached (recomputed only on filter), and the counter text is only
+  // rewritten when the index changes — so the per-frame scroll path does no DOM
+  // queries and no reflow, keeping the horizontal scrub smooth.
+  let visCount = 0, lastIdx = -1;
+  const recount = () => { visCount = $$('.panel', track).filter(p => !p.classList.contains('is-hidden')).length; };
 
   const updateHUD = progress => {
-    const n = Math.max(1, visibleCount());
     if (fill) fill.style.transform = `scaleX(${progress})`;
-    if (curEl) curEl.textContent = num(Math.min(n, Math.round(progress * (n - 1)) + 1));
+    const n = Math.max(1, visCount);
+    const idx = Math.min(n, Math.round(progress * (n - 1)) + 1);
+    if (curEl && idx !== lastIdx) { curEl.textContent = num(idx); lastIdx = idx; }
   };
-  const setTotal = () => { if (totalEl) totalEl.textContent = num(visibleCount()); };
+  const setTotal = () => { recount(); lastIdx = -1; if (totalEl) totalEl.textContent = num(visCount); };
+  setTotal();
 
   const usePin = !isTouch() && !reduce() &&
                  typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
@@ -590,6 +596,8 @@ function initGallery () {
         start: 'top top',
         end: () => '+=' + amount(),
         pin: true,
+        pinType: 'fixed',        // Lenis scrolls the window — fixed pin avoids jitter
+        anticipatePin: 1,        // engage the pin a hair early — no hitch on grab
         scrub: 1,
         invalidateOnRefresh: true,
         onUpdate: self => updateHUD(self.progress),
