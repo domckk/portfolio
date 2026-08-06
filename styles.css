@@ -6,14 +6,14 @@
 
 /* ---------------------------------------------------------------- TOKENS --- */
 :root {
-  /* Ink & paper — strictly grayscale */
-  --paper:   #ffffff;
-  --ink:     #0a0a0a;
-  --ink-2:   #161616;   /* dark section surface */
+  /* Ink & paper — refined grayscale ("paper & ink", not screen black/white) */
+  --paper:   #f7f7f5;   /* soft off-white page */
+  --ink:     #0e0e0e;   /* near-black ink + dark sections */
+  --ink-2:   #181818;   /* dark section surface (plates) */
   --gray:    #6e6e6e;   /* muted body on paper */
   --gray-2:  #9a9a9a;   /* faint meta on paper */
   --line:    #e4e4e4;   /* hairline on paper */
-  --panel:   #f4f4f4;   /* subtle fill on paper */
+  --panel:   #efefed;   /* subtle fill on paper */
 
   /* On dark sections */
   --paper-inv: #f4f4f4; /* text on dark */
@@ -216,7 +216,7 @@ body.cursor-on, body.cursor-on a, body.cursor-on button { cursor: none; }
 }
 .nav.is-solid { mix-blend-mode: normal; }
 .nav.is-solid {
-  background: rgba(255,255,255,0.82);
+  background: rgba(247,247,245,0.82);
   backdrop-filter: blur(14px);
   border-bottom-color: var(--line);
   color: var(--ink);
