@@ -208,9 +208,8 @@
     </div>
 
     <!-- Horizontal gallery — pinned + scrubbed on desktop, native swipe on touch.
-         Prevent Lenis for TOUCH only (so the mobile swipe stays native) while the
-         desktop wheel keeps flowing through Lenis into a smooth horizontal scrub. -->
-    <div class="gallery" id="gallery" data-lenis-prevent-touch>
+         data-lenis-prevent keeps horizontal touch-scroll native so swipe works. -->
+    <div class="gallery" id="gallery" data-lenis-prevent>
       <ol class="gallery__track" id="gallery-track"></ol>
       <div class="gallery__foot" aria-hidden="true">
         <span class="gallery__count"><em id="gallery-cur">01</em> / <span id="gallery-total">08</span></span>
