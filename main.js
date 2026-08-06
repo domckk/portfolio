@@ -1,10 +1,13 @@
-/* =============================================
-   PORTFOLIO — MAIN SCRIPT
-   ============================================= */
+/* =============================================================================
+   CLYDE DOMINICK MORALES — PORTFOLIO
+   Editorial motion: Lenis smooth scroll + GSAP ScrollTrigger.
+   Desktop is hijacked (inertial); touch degrades to native scrolling.
+   Everything is reduced-motion aware.
+   ============================================================================= */
 
 'use strict';
 
-/* ─── DATA ─────────────────────────────────────── */
+/* ─── DATA ─────────────────────────────────────────────────────────────── */
 
 const PROJECTS = [
   {
@@ -171,61 +174,27 @@ const PROJECTS = [
   },
 ];
 
-/* Skills grouped by domain rather than scored out of 100 — proficiency
-   percentages are self-assigned and unverifiable. `primary` marks the tools
-   actually reached for in the projects below, which is the honest signal. */
+/* Skills grouped by domain — `primary` marks the tools actually reached for. */
 const SKILL_GROUPS = [
-  {
-    label: 'Languages',
-    items: [
-      { name: 'JavaScript', primary: true },
-      { name: 'TypeScript', primary: true },
-      { name: 'Python', primary: true },
-      { name: 'C / C++' },
-      { name: 'SQL' },
-    ],
-  },
-  {
-    label: 'Frontend & Mobile',
-    items: [
-      { name: 'React', primary: true },
-      { name: 'React Native', primary: true },
-      { name: 'Next.js' },
-      { name: 'HTML / CSS' },
-      { name: 'Tailwind CSS' },
-      { name: 'Flutter' },
-    ],
-  },
-  {
-    label: 'Backend & Data',
-    items: [
-      { name: 'FastAPI', primary: true },
-      { name: 'Node.js' },
-      { name: 'PostgreSQL', primary: true },
-      { name: 'MySQL' },
-      { name: 'Redis' },
-      { name: 'REST APIs' },
-    ],
-  },
-  {
-    label: 'AI / ML',
-    items: [
-      { name: 'spaCy' },
-      { name: 'Rasa NLU' },
-      { name: 'scikit-learn' },
-      { name: 'Data Analytics' },
-    ],
-  },
-  {
-    label: 'Tools & Practices',
-    items: [
-      { name: 'Git / GitHub', primary: true },
-      { name: 'Supabase' },
-      { name: 'Firebase' },
-      { name: 'Expo' },
-      { name: 'Figma' },
-    ],
-  },
+  { label: 'Languages', items: [
+    { name: 'JavaScript', primary: true }, { name: 'TypeScript', primary: true },
+    { name: 'Python', primary: true }, { name: 'C / C++' }, { name: 'SQL' },
+  ] },
+  { label: 'Frontend & Mobile', items: [
+    { name: 'React', primary: true }, { name: 'React Native', primary: true },
+    { name: 'Next.js' }, { name: 'HTML / CSS' }, { name: 'Tailwind CSS' }, { name: 'Flutter' },
+  ] },
+  { label: 'Backend & Data', items: [
+    { name: 'FastAPI', primary: true }, { name: 'Node.js' },
+    { name: 'PostgreSQL', primary: true }, { name: 'MySQL' }, { name: 'Redis' }, { name: 'REST APIs' },
+  ] },
+  { label: 'AI / ML', items: [
+    { name: 'spaCy' }, { name: 'Rasa NLU' }, { name: 'scikit-learn' }, { name: 'Data Analytics' },
+  ] },
+  { label: 'Tools & Practices', items: [
+    { name: 'Git / GitHub', primary: true }, { name: 'Supabase' },
+    { name: 'Firebase' }, { name: 'Expo' }, { name: 'Figma' },
+  ] },
 ];
 
 const TIMELINE = {
@@ -327,478 +296,492 @@ const TIMELINE = {
   ],
 };
 
-/* ─── HELPERS ──────────────────────────────────── */
+/* ─── HELPERS ──────────────────────────────────────────────────────────── */
 
 const $  = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
-/** Escape untrusted-shaped text before it goes into innerHTML. */
 const esc = str => String(str).replace(/[&<>"']/g, c => (
   { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
 ));
 
 const hasLink = url => Boolean(url) && url !== '#';
+const reduce  = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isTouch = () => window.matchMedia('(hover: none), (pointer: coarse)').matches;
+const num = n => String(n).padStart(2, '0');
 
-const prefersReducedMotion = () =>
-  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-/** Observe elements once, then unobserve. */
-function observeOnce (elements, onEnter, options = {}) {
-  if (!elements.length) return;
-
-  const io = new IntersectionObserver((entries, obs) => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      onEnter(entry.target);
-      obs.unobserve(entry.target);
-    });
-  }, { threshold: 0.15, ...options });
-
-  elements.forEach(el => io.observe(el));
+/* Plate markup shared by hover preview + modal. Real logo, else index numeral. */
+function plateHTML (p, i, big = false) {
+  if (p.logo) {
+    return `<div class="preview__inner"><img src="${p.logo}" alt="" loading="lazy" /><span class="preview__cap">${esc(p.title)}</span></div>`;
+  }
+  return `<div class="preview__inner"><span class="preview__big">${num(i + 1)}</span><span class="preview__cap">${esc(p.title)}</span></div>`;
 }
 
-/* ─── NAVBAR ───────────────────────────────────── */
+/* ─── LENIS + GSAP CORE ────────────────────────────────────────────────── */
+
+let lenis = null;
+
+function initMotion () {
+  const canGsap = typeof gsap !== 'undefined';
+  if (canGsap && typeof ScrollTrigger !== 'undefined') gsap.registerPlugin(ScrollTrigger);
+
+  document.documentElement.classList.add('js');
+
+  // Lenis on desktop only; touch keeps native momentum scrolling.
+  if (typeof Lenis !== 'undefined' && !isTouch() && !reduce()) {
+    lenis = new Lenis({
+      duration: 1.1,
+      easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+    });
+
+    if (canGsap && typeof ScrollTrigger !== 'undefined') {
+      lenis.on('scroll', ScrollTrigger.update);
+      gsap.ticker.add(time => lenis.raf(time * 1000));
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      const raf = t => { lenis.raf(t); requestAnimationFrame(raf); };
+      requestAnimationFrame(raf);
+    }
+  }
+
+  buildReveals(canGsap);
+}
+
+/* Line masks + fade-rise reveals, driven by ScrollTrigger (or IO fallback). */
+function buildReveals (canGsap) {
+  if (reduce()) {
+    $$('.reveal, .ln').forEach(el => el.classList.add('is-in'));
+    return;
+  }
+
+  const useST = canGsap && typeof ScrollTrigger !== 'undefined';
+
+  // Any standalone .ln (e.g. hero/section titles not wrapped in .reveal)
+  const lines = $$('.ln').filter(l => !l.closest('.reveal'));
+  const targets = [...$$('.reveal'), ...lines];
+
+  if (useST) {
+    targets.forEach(el => {
+      ScrollTrigger.create({
+        trigger: el,
+        start: 'top 88%',
+        once: true,
+        onEnter: () => el.classList.add('is-in'),
+      });
+    });
+  } else {
+    const io = new IntersectionObserver((entries, obs) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-in');
+        obs.unobserve(e.target);
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+    targets.forEach(el => io.observe(el));
+  }
+
+  // Hero title fires immediately (above the fold, no scroll needed)
+  requestAnimationFrame(() => {
+    $$('.hero__title .ln, .hero .reveal').forEach(el => el.classList.add('is-in'));
+  });
+
+  // Gentle parallax on the portrait
+  if (useST) {
+    const fig = $('.about__frame img');
+    if (fig) {
+      gsap.to(fig, {
+        yPercent: -8,
+        ease: 'none',
+        scrollTrigger: { trigger: '.about__figure', start: 'top bottom', end: 'bottom top', scrub: true },
+      });
+    }
+  }
+}
+
+function scrollTo (target) {
+  const el = typeof target === 'string' ? $(target) : target;
+  if (!el) return;
+  if (lenis) lenis.scrollTo(el, { offset: -20 });
+  else el.scrollIntoView({ behavior: reduce() ? 'auto' : 'smooth' });
+}
+
+/* ─── NAV ──────────────────────────────────────────────────────────────── */
 
 function initNav () {
-  const navbar = $('#navbar');
-  const toggle = $('#nav-toggle');
-  const mobile = $('#mobile-nav');
+  const nav = $('#nav');
+  const toggle = $('#menu-toggle');
+  const menu = $('#menu');
+  const links = $$('.nav__link');
 
-  // Solidify the bar once the page scrolls away from the hero
-  const onScroll = () => {
-    const scrolled = window.scrollY > 24;
-    navbar.classList.toggle('border-b', scrolled);
-    navbar.classList.toggle('border-ink-50/7', scrolled);
-    navbar.classList.toggle('bg-ink-950/80', scrolled);
-    navbar.classList.toggle('backdrop-blur-lg', scrolled);
-  };
+  const onScroll = () => nav.classList.toggle('is-solid', window.scrollY > 40);
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
   const setMenu = open => {
-    mobile.classList.toggle('open', open);
+    document.body.classList.toggle('menu-open', open);
     toggle.setAttribute('aria-expanded', String(open));
-    toggle.innerHTML = `<i class="fas fa-${open ? 'times' : 'bars'} text-sm"></i>`;
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    menu.setAttribute('aria-hidden', String(!open));
+    if (lenis) open ? lenis.stop() : lenis.start();
   };
-
-  toggle.addEventListener('click', () => setMenu(!mobile.classList.contains('open')));
-  $$('a', mobile).forEach(a => a.addEventListener('click', () => setMenu(false)));
-
-  // Close on Escape, and if the viewport grows past the mobile breakpoint
+  toggle.addEventListener('click', () => setMenu(!document.body.classList.contains('menu-open')));
+  $$('.menu__link, .menu__foot a', menu).forEach(a =>
+    a.addEventListener('click', () => setMenu(false)));
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && mobile.classList.contains('open')) setMenu(false);
-  });
-  window.matchMedia('(min-width: 768px)').addEventListener('change', e => {
-    if (e.matches) setMenu(false);
+    if (e.key === 'Escape' && document.body.classList.contains('menu-open')) setMenu(false);
   });
 
-  // Highlight the nav link for whichever section is in view
-  const links = $$('.nav-link');
+  // Anchor smooth-scroll through Lenis
+  $$('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href');
+      if (id.length < 2 || !$(id)) return;
+      e.preventDefault();
+      if (document.body.classList.contains('menu-open')) setMenu(false);
+      scrollTo(id);
+    });
+  });
+
+  // Active section highlight
   const io = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
-      links.forEach(link => {
-        link.classList.toggle('active', link.getAttribute('href') === `#${entry.target.id}`);
-      });
+      links.forEach(l => l.classList.toggle('is-active', l.getAttribute('href') === `#${entry.target.id}`));
     });
-  }, { threshold: 0.4 });
-
-  $$('section[id]').forEach(section => io.observe(section));
+  }, { threshold: 0.3, rootMargin: '-20% 0px -60% 0px' });
+  $$('main section[id]').forEach(s => io.observe(s));
 }
 
-/* ─── SCROLL CHOREOGRAPHY ──────────────────────── */
+/* ─── PROGRESS ─────────────────────────────────────────────────────────── */
 
-/**
- * Progress bar + hero parallax, both driven from a single rAF-throttled
- * scroll listener so we never do layout work more than once a frame.
- */
-function initScrollFX () {
-  const bar = $('#scroll-progress');
-  // Target the <img>, not #hero-photo: that wrapper is a .reveal, and writing
-  // inline transform/opacity onto it would override its entrance animation.
-  const photo = $('#hero-photo img');
-  const hero  = $('#hero');
-  const reduce = prefersReducedMotion();
-
+function initProgress () {
+  const bar = $('#progress');
+  if (!bar) return;
   let ticking = false;
-
   const update = () => {
     ticking = false;
-    const y = window.scrollY;
-
-    if (bar) {
-      const max = document.documentElement.scrollHeight - window.innerHeight;
-      const p = max > 0 ? Math.min(y / max, 1) : 0;
-      bar.style.transform = `scaleX(${p})`;
-    }
-
-    // Drift the cut-out and fade the hero as it leaves — desktop only, since
-    // on phones the photo sits inline above the name and shifting it looks broken.
-    if (photo && hero && !reduce && window.innerWidth >= 1024) {
-      const h = hero.offsetHeight;
-      const p = Math.min(y / h, 1);
-      photo.style.transform = `translate3d(0, ${p * -40}px, 0)`;
-      photo.style.opacity = String(1 - p * 0.55);
-    }
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.transform = `scaleX(${max > 0 ? Math.min(window.scrollY / max, 1) : 0})`;
   };
-
   window.addEventListener('scroll', () => {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(update);
   }, { passive: true });
-
-  window.addEventListener('resize', update, { passive: true });
   update();
 }
 
-/* ─── TYPED HEADLINE ───────────────────────────── */
+/* ─── CUSTOM CURSOR ────────────────────────────────────────────────────── */
 
-function initTyped () {
-  const el = $('#typed');
-  if (!el) return;
+function initCursor () {
+  const cursor = $('#cursor');
+  if (!cursor || isTouch() || reduce()) return;
 
-  const strings = [
-    'Software Engineer',
-    'Full Stack Developer',
-    'Cybersecurity Enthusiast',
-    'CS Graduate @ MMSU',
-  ];
+  const label = $('.cursor__label', cursor);
+  document.body.classList.add('cursor-on');
+  cursor.style.display = 'flex';
 
-  // Typed.js loads via CDN and animates — skip both if unavailable or unwanted
-  if (typeof Typed === 'undefined' || prefersReducedMotion()) {
-    el.textContent = strings[0];
-    return;
-  }
+  let cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+  let tx = cx, ty = cy;
 
-  new Typed('#typed', {
-    strings,
-    typeSpeed: 55,
-    backSpeed: 25,
-    backDelay: 2200,
-    loop: true,
+  const loop = () => {
+    cx += (tx - cx) * 0.18;
+    cy += (ty - cy) * 0.18;
+    cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
+    requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
+
+  window.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; }, { passive: true });
+  document.addEventListener('mouseleave', () => cursor.classList.add('is-hidden'));
+  document.addEventListener('mouseenter', () => cursor.classList.remove('is-hidden'));
+
+  // Enlarge + label over interactive targets
+  const setState = (active, text = '') => {
+    cursor.classList.toggle('is-active', active);
+    label.textContent = text;
+  };
+  document.addEventListener('mouseover', e => {
+    const project = e.target.closest('.index__btn');
+    const link = e.target.closest('[data-cursor]');
+    if (project) setState(true, 'View');
+    else if (link) setState(true, '');
+    else setState(false);
   });
 }
 
-/* ─── SCROLL REVEAL ────────────────────────────── */
+/* ─── WORK INDEX ───────────────────────────────────────────────────────── */
 
-function initReveal () {
-  observeOnce($$('.reveal'), el => {
-    el.classList.add('visible');
-    // Release the compositor layer once the transition has run
-    el.addEventListener('transitionend', () => el.classList.add('done'), { once: true });
-  }, { threshold: 0.1, rootMargin: '0px 0px -8% 0px' });
-}
-
-/* ─── SKILLS ───────────────────────────────────── */
-
-function buildSkills () {
-  const list = $('#skills-list');
+function buildWork () {
+  const list = $('#work-index');
   if (!list) return;
 
-  list.innerHTML = SKILL_GROUPS.map((group, gi) => `
-    <div class="reveal" style="--i:${gi}">
-      <h4 class="font-mono text-[11px] uppercase tracking-[0.16em] text-ink-400">${esc(group.label)}</h4>
-      <div class="mt-3 flex flex-wrap gap-1.5">
-        ${group.items.map(item => `
-          <span class="${item.primary ? 'tag-primary' : 'tag'}">${esc(item.name)}</span>
-        `).join('')}
-      </div>
-    </div>
+  list.innerHTML = PROJECTS.map((p, i) => `
+    <li class="index__row" data-id="${p.id}" data-category="${p.category}">
+      <button class="index__btn" aria-label="View ${esc(p.title)}">
+        <span class="index__no">${num(i + 1)}</span>
+        <span class="index__main">
+          <span class="index__title">${esc(p.title)}</span>
+          <span class="index__desc">${esc(p.description)}</span>
+        </span>
+        <span class="index__aside">
+          ${p.award ? `<span class="index__award">Award</span>` : ''}
+          <span class="index__tags">${p.tags.slice(0, 2).map(t => `<span>${esc(t)}</span>`).join('')}</span>
+          <span class="index__year">${esc(p.year)}</span>
+          <span class="index__go" aria-hidden="true">→</span>
+        </span>
+      </button>
+    </li>
   `).join('');
 
-  observeOnce($$('.reveal', list), el => el.classList.add('visible'), { threshold: 0.15 });
+  $$('.index__row', list).forEach(row =>
+    $('.index__btn', row).addEventListener('click', () => openModal(row.dataset.id)));
+
+  initPreview();
 }
 
-/* ─── PROJECTS ─────────────────────────────────── */
+/* Floating preview plate that follows the cursor on desktop hover. */
+function initPreview () {
+  const preview = $('#work-preview');
+  if (!preview || isTouch() || reduce()) return;
 
-function buildProjectCards () {
-  const grid = $('#projects-grid');
-  if (!grid) return;
+  let px = 0, py = 0, cx = 0, cy = 0, raf = null;
+  const loop = () => {
+    cx += (px - cx) * 0.14;
+    cy += (py - cy) * 0.14;
+    preview.style.transform = `translate(${cx}px, ${cy}px) translate(-50%, -50%)`;
+    raf = requestAnimationFrame(loop);
+  };
 
-  grid.innerHTML = PROJECTS.map((p, i) => `
-    <article class="project-card reveal" style="--i:${i % 3}" data-id="${p.id}" data-category="${p.category}">
-      <button class="group surface surface-hover flex h-full w-full flex-col overflow-hidden text-left"
-              aria-label="View details for ${esc(p.title)}">
-
-        <div class="relative flex h-36 w-full items-center justify-center overflow-hidden border-b border-ink-50/7 bg-ink-850">
-          <div class="bg-grid absolute inset-0 opacity-40"></div>
-          ${p.logo
-            ? `<img src="${p.logo}" alt="" class="relative h-14 w-14 object-contain transition-transform duration-500 group-hover:scale-110" loading="lazy" />`
-            : `<span class="relative text-4xl transition-transform duration-500 group-hover:scale-110">${p.icon}</span>`}
-          ${p.award
-            ? `<span class="absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-md border border-gold-500/30 bg-gold-500/10 px-2 py-1 font-mono text-[10px] text-gold-400">
-                 <i class="fas fa-award"></i> Award
-               </span>`
-            : ''}
-        </div>
-
-        <div class="flex flex-1 flex-col p-5">
-          <div class="flex items-center gap-2 font-mono text-[11px] text-ink-400">
-            <span>${esc(p.year)}</span>
-            <span class="text-ink-600">/</span>
-            <span>${esc(p.role)}</span>
-          </div>
-
-          <h3 class="mt-2 text-base transition-colors group-hover:text-accent-300">${esc(p.title)}</h3>
-          <p class="mt-2 flex-1 text-[13px] leading-relaxed text-ink-400">${esc(p.description)}</p>
-
-          <div class="mt-4 flex flex-wrap gap-1.5">
-            ${p.tags.slice(0, 3).map(t => `<span class="tag">${esc(t)}</span>`).join('')}
-            ${p.tags.length > 3 ? `<span class="tag">+${p.tags.length - 3}</span>` : ''}
-          </div>
-
-          <div class="mt-5 flex items-center justify-between border-t border-ink-50/7 pt-4">
-            <span class="font-mono text-[11px] text-ink-400 transition-colors group-hover:text-accent-300">Details</span>
-            <i class="fas fa-arrow-right text-[10px] text-ink-400 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-accent-300"></i>
-          </div>
-        </div>
-      </button>
-    </article>
-  `).join('');
-
-  $$('.project-card', grid).forEach(card => {
-    card.addEventListener('click', () => openModal(card.dataset.id));
+  $$('.index__row').forEach(row => {
+    const p = PROJECTS.find(x => x.id === row.dataset.id);
+    const i = PROJECTS.indexOf(p);
+    row.addEventListener('mouseenter', () => {
+      preview.innerHTML = plateHTML(p, i);
+      preview.classList.add('is-visible');
+      if (!raf) raf = requestAnimationFrame(loop);
+    });
+    row.addEventListener('mouseleave', () => {
+      preview.classList.remove('is-visible');
+    });
   });
+
+  window.addEventListener('mousemove', e => { px = e.clientX + 120; py = e.clientY; }, { passive: true });
 }
 
 function initFilter () {
-  const buttons = $$('.filter-btn');
-  const cards   = $$('.project-card');
-
-  const setActive = btn => {
-    buttons.forEach(b => {
-      const on = b === btn;
-      b.classList.toggle('active', on);
-      b.setAttribute('aria-selected', String(on));
-    });
-  };
-
+  const buttons = $$('.filter');
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
-      setActive(btn);
-      const filter = btn.dataset.filter;
-
-      cards.forEach(card => {
-        const show = filter === 'all' || card.dataset.category === filter;
-        card.classList.toggle('hidden', !show);
+      buttons.forEach(b => {
+        const on = b === btn;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-selected', String(on));
       });
+      const filter = btn.dataset.filter;
+      $$('.index__row').forEach(row => {
+        row.classList.toggle('is-hidden', !(filter === 'all' || row.dataset.category === filter));
+      });
+      if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
     });
   });
 }
 
-/* ─── PROJECT MODAL ────────────────────────────── */
+/* ─── MODAL ────────────────────────────────────────────────────────────── */
 
 let lastFocused = null;
 
 function openModal (id) {
   const p = PROJECTS.find(x => x.id === id);
   if (!p) return;
-
+  const i = PROJECTS.indexOf(p);
   lastFocused = document.activeElement;
 
-  $('#modal-tags').innerHTML = p.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('');
-  $('#modal-preview-icon').textContent = p.icon;
+  $('#modal-no').textContent = num(i + 1);
+  $('#modal-plate').innerHTML = plateHTML(p, i, true);
+  $('#modal-year').textContent = p.year;
+  $('#modal-role').textContent = p.role;
   $('#modal-title').textContent = p.title;
-  $('#modal-desc').textContent  = p.longDesc;
+  $('#modal-desc').textContent = p.longDesc;
+  $('#modal-tags').innerHTML = p.tags.map(t => `<span>${esc(t)}</span>`).join('');
+  $('#modal-features').innerHTML = p.features.map(f => `<li>${esc(f)}</li>`).join('');
 
   const award = $('#modal-award');
-  award.classList.toggle('hidden', !p.award);
-  award.classList.toggle('flex', Boolean(p.award));
-  if (p.award) {
-    award.innerHTML = `<i class="fas fa-award mt-0.5 shrink-0"></i><span>${esc(p.award)}</span>`;
-  }
+  award.hidden = !p.award;
+  if (p.award) award.innerHTML = `<span>${esc(p.award)}</span>`;
 
-  $('#modal-features-list').innerHTML = p.features.map(f => `
-    <li class="flex gap-3 text-[13px] leading-relaxed text-ink-300">
-      <i class="fas fa-check mt-1 shrink-0 text-[10px] text-accent-400"></i>
-      <span>${esc(f)}</span>
-    </li>
-  `).join('');
+  const gh = $('#modal-github'), live = $('#modal-live');
+  gh.hidden = !hasLink(p.github);
+  live.hidden = !hasLink(p.live);
+  if (hasLink(p.github)) gh.href = p.github;
+  if (hasLink(p.live)) live.href = p.live;
 
-  // Hide dead links rather than rendering a button that goes nowhere
-  const github = $('#modal-github');
-  const live   = $('#modal-live');
-  github.classList.toggle('hidden', !hasLink(p.github));
-  live.classList.toggle('hidden', !hasLink(p.live));
-  if (hasLink(p.github)) github.href = p.github;
-  if (hasLink(p.live))   live.href   = p.live;
-
-  const overlay = $('#modal-overlay');
-  overlay.classList.remove('hidden');
-  overlay.classList.add('flex');
+  const modal = $('#modal');
+  modal.classList.add('is-open');
+  modal.setAttribute('aria-hidden', 'false');
+  if (lenis) lenis.stop();
   document.body.style.overflow = 'hidden';
   $('#modal-close').focus();
 }
 
 function closeModal () {
-  const overlay = $('#modal-overlay');
-  overlay.classList.add('hidden');
-  overlay.classList.remove('flex');
+  const modal = $('#modal');
+  modal.classList.remove('is-open');
+  modal.setAttribute('aria-hidden', 'true');
+  if (lenis) lenis.start();
   document.body.style.overflow = '';
   if (lastFocused) lastFocused.focus();
 }
 
 function initModal () {
-  const overlay = $('#modal-overlay');
-
-  $('#modal-close').addEventListener('click', closeModal);
-  overlay.addEventListener('click', e => {
-    if (e.target === overlay) closeModal();
-  });
-
+  const modal = $('#modal');
+  $$('[data-close]', modal).forEach(el => el.addEventListener('click', closeModal));
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && !overlay.classList.contains('hidden')) closeModal();
+    if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
   });
 }
 
-/* ─── TIMELINE ─────────────────────────────────── */
+/* ─── SKILLS + MARQUEE ─────────────────────────────────────────────────── */
 
-function timelineItemHTML (item, i) {
-  const dot = item.highlight
-    ? 'border-gold-500/40 bg-gold-500/10 text-gold-400'
-    : 'border-ink-50/10 bg-ink-800 text-accent-400';
+function buildSkills () {
+  const list = $('#skills-list');
+  if (list) {
+    list.innerHTML = SKILL_GROUPS.map((g, gi) => `
+      <div class="cap reveal" data-d="${gi % 3}">
+        <h4 class="cap__label">${esc(g.label)}</h4>
+        ${g.items.map(it => `
+          <div class="cap__item ${it.primary ? 'is-primary' : ''}">
+            <span class="cap__mark" aria-hidden="true"></span>${esc(it.name)}
+          </div>`).join('')}
+      </div>`).join('');
+  }
 
-  const card = item.highlight
-    ? 'border-gold-500/25 bg-gold-500/4'
-    : '';
+  // Marquee — the primary tools, repeated for a seamless loop
+  const track = $('#marquee-track');
+  if (track) {
+    const words = SKILL_GROUPS.flatMap(g => g.items.filter(i => i.primary).map(i => i.name))
+      .concat(['Web', 'Mobile', 'AI / ML', 'Security']);
+    const run = `<span>${words.map(esc).join('</span><span>')}</span>`;
+    track.innerHTML = run + run; // duplicate for -50% loop
+  }
+}
 
+/* ─── LEDGER (timeline) ────────────────────────────────────────────────── */
+
+function ledgerRowHTML (item) {
   return `
-    <li class="timeline-item reveal relative pl-10 pb-10 last:pb-0" style="--i:${Math.min(i, 3)}">
-      <span class="absolute left-0 top-1 flex h-7 w-7 items-center justify-center rounded-full border ${dot}">
-        <i class="fas fa-${item.highlight ? 'trophy' : 'circle'} text-[9px]"></i>
-      </span>
-      <div class="surface ${card} p-5">
-        <span class="font-mono text-[11px] text-accent-400">${esc(item.period)}</span>
-        <h3 class="mt-2 text-[15px]">${esc(item.title)}</h3>
-        <p class="mt-1 text-[13px] text-ink-400">${esc(item.org)}</p>
-        <p class="mt-3 text-[13px] leading-relaxed text-ink-300">${esc(item.desc)}</p>
-        <div class="mt-4 flex flex-wrap gap-1.5">
-          ${item.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('')}
-        </div>
+    <div class="ledger__row ${item.highlight ? 'is-highlight' : ''}">
+      <div class="ledger__period">${esc(item.period)}</div>
+      <div class="ledger__main">
+        ${item.highlight ? `<span class="ledger__badge">Award</span>` : ''}
+        <h3 class="ledger__title">${esc(item.title)}</h3>
+        <p class="ledger__org">${esc(item.org)}</p>
+        <p class="ledger__desc">${esc(item.desc)}</p>
+        <div class="ledger__tags">${item.tags.map(t => `<span>${esc(t)}</span>`).join('')}</div>
       </div>
-    </li>
-  `;
+    </div>`;
 }
 
-function buildTimelines () {
+function buildLedgers () {
   Object.entries(TIMELINE).forEach(([key, items]) => {
-    const panel = $(`#timeline-${key}`);
-    if (!panel) return;
-
-    panel.innerHTML = `
-      <ol class="relative max-w-3xl before:absolute before:bottom-0 before:left-[13px] before:top-2 before:w-px before:bg-ink-50/7">
-        ${items.map(timelineItemHTML).join('')}
-      </ol>
-    `;
+    const panel = $(`#ledger-${key}`);
+    if (panel) panel.innerHTML = items.map(ledgerRowHTML).join('');
   });
 }
 
-function initTimelineTabs () {
-  const tabs = $$('.timeline-tab');
-
+function initTabs () {
+  const tabs = $$('.exp__tab');
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       tabs.forEach(t => {
         const on = t === tab;
-        t.classList.toggle('active', on);
+        t.classList.toggle('is-active', on);
         t.setAttribute('aria-selected', String(on));
       });
-
       ['education', 'work'].forEach(key => {
-        $(`#timeline-${key}`).classList.toggle('hidden', key !== tab.dataset.tab);
+        $(`#ledger-${key}`).classList.toggle('is-hidden', key !== tab.dataset.tab);
       });
-
-      // The hidden panel's reveals never fired an intersection — show them now
-      $$(`#timeline-${tab.dataset.tab} .reveal`).forEach(el => el.classList.add('visible'));
+      if (typeof ScrollTrigger !== 'undefined') ScrollTrigger.refresh();
     });
   });
 }
 
-/* ─── COUNTERS ─────────────────────────────────── */
+/* ─── COUNTERS ─────────────────────────────────────────────────────────── */
 
 function initCounters () {
-  observeOnce($$('[data-count]'), el => {
-    const end    = parseInt(el.dataset.count, 10);
+  const els = $$('[data-count]');
+  const run = el => {
+    const end = parseInt(el.dataset.count, 10);
     const suffix = el.dataset.suffix || '';
-
-    if (prefersReducedMotion()) {
-      el.textContent = end + suffix;
-      return;
-    }
-
-    const duration = 1400;
-    const start    = performance.now();
-
+    if (reduce()) { el.textContent = end + suffix; return; }
+    const dur = 1400, start = performance.now();
     const tick = now => {
-      const p = Math.min((now - start) / duration, 1);
+      const p = Math.min((now - start) / dur, 1);
       const eased = 1 - Math.pow(1 - p, 3);
       el.textContent = Math.floor(eased * end) + suffix;
       if (p < 1) requestAnimationFrame(tick);
       else el.textContent = end + suffix;
     };
-
     requestAnimationFrame(tick);
-  }, { threshold: 0.5 });
+  };
+  const io = new IntersectionObserver((entries, obs) => {
+    entries.forEach(e => { if (e.isIntersecting) { run(e.target); obs.unobserve(e.target); } });
+  }, { threshold: 0.6 });
+  els.forEach(el => io.observe(el));
 }
 
-/* ─── CONTACT FORM ─────────────────────────────── */
+/* ─── CONTACT FORM ─────────────────────────────────────────────────────── */
 
 function initContactForm () {
-  const form    = $('#contact-form');
+  const form = $('#contact-form');
   const success = $('#form-success');
-  const error   = $('#form-error');
+  const error = $('#form-error');
   if (!form) return;
 
   form.addEventListener('submit', async e => {
     e.preventDefault();
-    error.classList.add('hidden');
+    error.hidden = true;
+    if (!form.checkValidity()) { form.reportValidity(); return; }
 
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
-
-    const btn  = $('.btn-submit', form);
+    const btn = $('.btn-submit', form);
     const html = btn.innerHTML;
-    btn.disabled  = true;
-    btn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Sending…';
+    btn.disabled = true;
+    btn.innerHTML = '<span>Sending…</span>';
 
     try {
       const res = await fetch(form.action, {
-        method:  'POST',
-        body:    new FormData(form),
+        method: 'POST',
+        body: new FormData(form),
         headers: { Accept: 'application/json' },
       });
-
       if (!res.ok) throw new Error(`Request failed: ${res.status}`);
-
-      form.classList.add('hidden');
-      success.classList.remove('hidden');
-      success.classList.add('flex');
+      form.hidden = true;
+      success.hidden = false;
     } catch (err) {
       error.textContent = 'Could not send — please email clydedominick09@gmail.com directly.';
-      error.classList.remove('hidden');
-      btn.disabled  = false;
+      error.hidden = false;
+      btn.disabled = false;
       btn.innerHTML = html;
     }
   });
 }
 
-/* ─── INIT ─────────────────────────────────────── */
+/* ─── INIT ─────────────────────────────────────────────────────────────── */
 
 document.addEventListener('DOMContentLoaded', () => {
+  buildWork();
   buildSkills();
-  buildProjectCards();
-  buildTimelines();
+  buildLedgers();
 
+  initMotion();      // Lenis + GSAP + reveals
   initNav();
-  initScrollFX();
-  initTyped();
+  initProgress();
+  initCursor();
   initFilter();
   initModal();
-  initTimelineTabs();
-  initContactForm();
+  initTabs();
   initCounters();
-  initReveal();
+  initContactForm();
 });

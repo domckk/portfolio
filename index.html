@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Clyde Dominick S. Morales — Computer Science graduate and software engineer building web, mobile, and AI systems." />
-  <meta name="theme-color" content="#08080A" />
+  <meta name="theme-color" content="#ffffff" />
   <title>Clyde Dominick S. Morales — Software Engineer</title>
 
   <!-- Open Graph -->
@@ -12,463 +12,383 @@
   <meta property="og:description" content="Computer Science graduate from MMSU building web, mobile, and AI systems. Best in Thesis 2026." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://clyde-portfolio.vercel.app/" />
-  <!-- Absolute URL required: social crawlers can't resolve relative paths.
-       Uses the headshot — the transparent cut-out renders poorly on link previews. -->
-  <meta property="og:image" content="https://clyde-portfolio.vercel.app/image/portfolio-pic.jpg" />
+  <meta property="og:image" content="https://clyde-portfolio.vercel.app/image/picture.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
 
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <!-- Fraunces (editorial display serif) · Inter (grotesque body) · JetBrains Mono (labels/meta) -->
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+
+  <!-- Mark JS-enabled synchronously so reveal/line-mask start states apply
+       before first paint (no flash), while no-JS users keep visible content. -->
+  <script>document.documentElement.classList.add('js');</script>
 </head>
 
-<body class="antialiased">
+<body>
 
-<a href="#main" class="btn btn-primary sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-100">
-  Skip to content
-</a>
+<a href="#work" class="skip-link">Skip to content</a>
 
-<!-- Scroll progress — width driven by main.js -->
-<div id="scroll-progress" class="scroll-progress" aria-hidden="true"></div>
+<!-- Scroll progress — scaled by main.js -->
+<div id="progress" class="progress" aria-hidden="true"></div>
 
-<!-- ===================== AMBIENT BACKGROUND ===================== -->
-<div class="pointer-events-none fixed inset-0 -z-10" aria-hidden="true">
-  <div class="bg-grid mask-fade-b absolute inset-0 h-[70vh]"></div>
-  <div class="absolute -top-40 left-1/2 h-152 w-152 -translate-x-1/2 rounded-full bg-accent-600/13 blur-[130px]"></div>
-  <div class="absolute bottom-0 right-0 h-104 w-104 translate-x-1/3 rounded-full bg-accent-500/6 blur-[120px]"></div>
-</div>
+<!-- Custom cursor — hidden on touch / reduced-motion via CSS + JS -->
+<div id="cursor" class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
 
-<!-- ===================== NAVBAR ===================== -->
-<header id="navbar" class="fixed inset-x-0 top-0 z-50 transition-all duration-300">
-  <div class="container-page">
-    <nav class="flex h-16 items-center justify-between md:h-18" aria-label="Main">
-      <a href="#hero" class="font-mono text-sm font-medium tracking-tight text-ink-50">
-        cyy.mrls<span class="text-accent-400">.</span>
-      </a>
+<!-- ===================== NAV ===================== -->
+<header id="nav" class="nav">
+  <div class="nav__inner">
+    <a href="#top" class="nav__mark" data-cursor>
+      Morales<span class="nav__idx">S.M</span>
+    </a>
 
-      <ul class="hidden items-center gap-8 md:flex">
-        <li><a href="#about"      class="nav-link">About</a></li>
-        <li><a href="#projects"   class="nav-link">Projects</a></li>
-        <li><a href="#experience" class="nav-link">Experience</a></li>
-        <li><a href="#contact"    class="nav-link">Contact</a></li>
-      </ul>
-
-      <div class="flex items-center gap-3">
-        <a href="#contact" class="btn btn-secondary btn-sm hidden md:inline-flex">Get in touch</a>
-
-        <button
-          id="nav-toggle"
-          class="flex h-9 w-9 items-center justify-center rounded-lg border border-ink-50/10 text-ink-200 md:hidden"
-          aria-label="Toggle navigation menu"
-          aria-expanded="false"
-          aria-controls="mobile-nav"
-        >
-          <i class="fas fa-bars text-sm"></i>
-        </button>
-      </div>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#about"      class="nav__link" data-cursor>About</a>
+      <a href="#work"       class="nav__link" data-cursor>Work</a>
+      <a href="#experience" class="nav__link" data-cursor>Path</a>
+      <a href="#contact"    class="nav__link" data-cursor>Contact</a>
     </nav>
-  </div>
 
-  <!-- Mobile nav -->
-  <div id="mobile-nav" class="mobile-nav">
-    <div>
-      <div class="container-page flex flex-col gap-0.5 border-t border-ink-50/7 bg-ink-950/95 py-4 backdrop-blur-lg">
-        <a href="#about"      class="mobile-nav-link" style="--i:0">About</a>
-        <a href="#projects"   class="mobile-nav-link" style="--i:1">Projects</a>
-        <a href="#experience" class="mobile-nav-link" style="--i:2">Experience</a>
-        <a href="#contact"    class="mobile-nav-link" style="--i:3">Contact</a>
-        <a href="#contact" class="btn btn-primary mt-3">Get in touch</a>
-      </div>
-    </div>
+    <a href="#contact" class="nav__cta" data-cursor>
+      <span class="nav__dot" aria-hidden="true"></span>
+      Available — 2026
+    </a>
+
+    <button id="menu-toggle" class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
+      <span></span><span></span>
+    </button>
   </div>
 </header>
 
-<main id="main">
-
-<!-- ===================== HERO ===================== -->
-<section id="hero" class="relative flex min-h-screen items-center pt-24 pb-16 lg:pt-28 lg:pb-20">
-  <div class="container-page">
-    <div class="grid items-center gap-7 text-center lg:grid-cols-[1.15fr_0.85fr] lg:gap-20 lg:text-left">
-
-      <!-- Text -->
-      <div class="order-2 lg:order-1">
-        <div class="reveal inline-flex items-center gap-2 rounded-full border border-ink-50/9 bg-ink-50/3 px-3 py-1.5 backdrop-blur-sm">
-          <span class="relative flex h-1.5 w-1.5">
-            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-          </span>
-          <span class="font-mono text-[11px] tracking-wide text-ink-300">Open to work</span>
-        </div>
-
-        <h1 class="reveal reveal-d1 mt-6 text-display font-semibold text-balance text-ink-50 lg:mt-7">
-          Clyde Dominick<br />
-          <span class="text-gradient">Morales</span>
-        </h1>
-
-        <p class="reveal reveal-d1 mt-4 font-mono text-sm text-accent-300 md:text-base lg:mt-5">
-          <span id="typed" aria-live="polite"></span>
-        </p>
-
-        <p class="reveal reveal-d2 mx-auto mt-5 max-w-xl text-pretty text-[15px] leading-relaxed text-ink-300 md:text-[17px] lg:mx-0 lg:mt-6">
-          Computer Science graduate from Mariano Marcos State University.
-          I build web apps, mobile apps, and AI systems.
-        </p>
-
-        <div class="reveal reveal-d2 mt-8 flex flex-wrap justify-center gap-3 lg:mt-9 lg:justify-start">
-          <a href="#projects" class="btn btn-primary">
-            View projects <i class="fas fa-arrow-right text-xs"></i>
-          </a>
-          <a href="#contact" class="btn btn-secondary">Get in touch</a>
-        </div>
-
-        <!-- Stats -->
-        <dl class="reveal reveal-d3 mx-auto mt-10 grid max-w-lg grid-cols-3 gap-4 border-t border-ink-50/7 pt-7 sm:gap-6 lg:mx-0 lg:mt-14 lg:pt-8">
-          <div>
-            <dt class="sr-only">Years coding</dt>
-            <dd>
-              <span class="block font-mono text-2xl font-medium text-ink-50" data-count="4" data-suffix="+">0+</span>
-              <span class="mt-1 block text-xs text-ink-400">Years coding</span>
-            </dd>
-          </div>
-          <div>
-            <dt class="sr-only">Projects built</dt>
-            <dd>
-              <span class="block font-mono text-2xl font-medium text-ink-50" data-count="10" data-suffix="+">0+</span>
-              <span class="mt-1 block text-xs text-ink-400">Projects built</span>
-            </dd>
-          </div>
-          <div>
-            <dt class="sr-only">Certifications</dt>
-            <dd>
-              <span class="block font-mono text-2xl font-medium text-ink-50" data-count="5" data-suffix="+">0+</span>
-              <span class="mt-1 block text-xs text-ink-400">Certifications</span>
-            </dd>
-          </div>
-        </dl>
-      </div>
-
-      <!-- Portrait — transparent cut-out, so it floats on the background rather than
-           sitting in a card. Small and above the name on phones; right column on desktop. -->
-      <div id="hero-photo" class="reveal reveal-d1 relative order-1 mx-auto w-28 sm:w-36 lg:order-2 lg:mx-0 lg:w-full lg:max-w-xs lg:justify-self-end">
-        <div class="absolute bottom-0 left-1/2 -z-10 h-4/5 w-4/5 -translate-x-1/2 rounded-full bg-accent-500/20 blur-3xl" aria-hidden="true"></div>
-        <img
-          src="image/portfolio-pic.png"
-          alt="Clyde Dominick S. Morales"
-          class="w-full object-contain drop-shadow-2xl"
-          width="201" height="383"
-          fetchpriority="high"
-        />
-
-        <!-- Floating skill chips — decorative, so hidden from screen readers
-             (the same skills are listed properly in the About section). -->
-        <div class="float-chip -left-22 top-[8%] lg:-left-8 lg:top-[16%]" style="animation-delay:0s" aria-hidden="true">
-          <i class="fas fa-code text-[10px] text-accent-400 lg:text-xs"></i>
-          <span class="font-mono text-[10px] text-ink-200 lg:text-[11px]">Full Stack</span>
-        </div>
-        <div class="float-chip -right-18 top-[40%] lg:-right-6 lg:top-[44%]" style="animation-delay:1.6s" aria-hidden="true">
-          <i class="fas fa-brain text-[10px] text-accent-400 lg:text-xs"></i>
-          <span class="font-mono text-[10px] text-ink-200 lg:text-[11px]">AI / ML</span>
-        </div>
-        <div class="float-chip -left-24 bottom-[10%] lg:-left-4 lg:bottom-[16%]" style="animation-delay:3.2s" aria-hidden="true">
-          <i class="fas fa-mobile-screen-button text-[10px] text-accent-400 lg:text-xs"></i>
-          <span class="font-mono text-[10px] text-ink-200 lg:text-[11px]">Mobile Apps</span>
-        </div>
-      </div>
-
-    </div>
+<!-- Fullscreen mobile menu -->
+<div id="menu" class="menu" aria-hidden="true">
+  <nav class="menu__nav" aria-label="Mobile">
+    <a href="#about"      class="menu__link" style="--i:0"><em>01</em> About</a>
+    <a href="#work"       class="menu__link" style="--i:1"><em>02</em> Work</a>
+    <a href="#experience" class="menu__link" style="--i:2"><em>03</em> Path</a>
+    <a href="#contact"    class="menu__link" style="--i:3"><em>04</em> Contact</a>
+  </nav>
+  <div class="menu__foot">
+    <span>Ilocos Norte, PH</span>
+    <a href="mailto:clydedominick09@gmail.com">clydedominick09@gmail.com</a>
   </div>
-</section>
+</div>
 
-<!-- ===================== ABOUT ===================== -->
-<section id="about" class="border-t border-ink-50/7 py-20 md:py-32">
-  <div class="container-page">
-    <div class="reveal max-w-2xl">
-      <span class="eyebrow">About</span>
-      <h2 class="mt-4 text-h2">
-        Building things that <span class="text-gradient">solve real problems</span>
+<main id="top">
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap">
+
+      <div class="hero__meta">
+        <span class="tick">Software Engineer</span>
+        <span class="tick">Web · Mobile · AI Systems</span>
+        <span class="tick tick--end">Portfolio © 2026</span>
+      </div>
+
+      <h1 id="hero-title" class="hero__title">
+        <span class="ln"><span class="ln__i">Clyde Dominick</span></span>
+        <span class="ln"><span class="ln__i">Morales<span class="hero__amp">.</span></span></span>
+      </h1>
+
+      <div class="hero__base">
+        <p class="hero__lede reveal">
+          Computer&nbsp;Science graduate from Mariano Marcos State University.
+          I design and build web apps, mobile apps, and AI systems — end to end.
+        </p>
+        <div class="hero__coords reveal" data-d="1">
+          <div>
+            <span class="tick">Based in</span>
+            <span class="hero__coord">Piddig, Ilocos Norte</span>
+          </div>
+          <div>
+            <span class="tick">Status</span>
+            <span class="hero__coord">Open to work</span>
+          </div>
+        </div>
+      </div>
+
+      <a href="#about" class="hero__scroll" data-cursor aria-label="Scroll to begin">
+        <span class="tick">Scroll</span>
+        <span class="hero__scrollline" aria-hidden="true"></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section id="about" class="about section" aria-labelledby="about-title">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="sec-no">01</span>
+        <h2 id="about-title" class="sec-title">
+          <span class="ln"><span class="ln__i">Determination is one</span></span>
+          <span class="ln"><span class="ln__i">of the key factors</span></span>
+          <span class="ln"><span class="ln__i">of knowledge.</span></span>
+        </h2>
+      </div>
+
+      <div class="about__grid">
+        <figure class="about__figure reveal">
+          <div class="about__frame">
+            <img src="image/portfolio-pic.png" alt="Portrait of Clyde Dominick S. Morales"
+                 width="201" height="383" loading="lazy" />
+          </div>
+          <figcaption class="tick">Fig. 01 — C.D. Morales, Batac City</figcaption>
+        </figure>
+
+        <div class="about__body">
+          <p class="about__lead reveal">
+            I care about software that reaches the people who actually need it — the
+            belief behind every line I write.
+          </p>
+          <div class="about__cols">
+            <p class="reveal">
+              My work spans web development, mobile development, and AI / ML. I've
+              built AI-powered healthcare chatbots, IoT robotic-arm controllers,
+              real-time encrypted chat apps, and cryptography tooling.
+            </p>
+            <p class="reveal">
+              I'm always pushing myself to learn, adapt, and ship — and I'm currently
+              open to full-time roles and collaborative projects.
+            </p>
+          </div>
+
+          <dl class="about__stats reveal" data-d="1">
+            <div>
+              <dd class="stat" data-count="4" data-suffix="+">0</dd>
+              <dt class="tick">Years coding</dt>
+            </div>
+            <div>
+              <dd class="stat" data-count="10" data-suffix="+">0</dd>
+              <dt class="tick">Projects built</dt>
+            </div>
+            <div>
+              <dd class="stat" data-count="5" data-suffix="+">0</dd>
+              <dt class="tick">Certifications</dt>
+            </div>
+          </dl>
+
+          <div class="about__links reveal" data-d="2">
+            <a href="https://github.com/domckk" class="link-arrow" target="_blank" rel="noopener" data-cursor>GitHub <span aria-hidden="true">↗</span></a>
+            <a href="mailto:clydedominick09@gmail.com" class="link-arrow" data-cursor>Email <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== WORK (inverted) ===================== -->
+  <section id="work" class="work section section--dark" aria-labelledby="work-title">
+    <div class="wrap">
+      <div class="sec-head sec-head--split">
+        <div>
+          <span class="sec-no">02</span>
+          <h2 id="work-title" class="sec-title">
+            <span class="ln"><span class="ln__i">Selected</span></span>
+            <span class="ln"><span class="ln__i">Work</span></span>
+          </h2>
+        </div>
+        <p class="sec-note reveal">
+          School and personal projects across AI, web development, security, and
+          systems programming — a curated index.
+        </p>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters reveal" role="tablist" aria-label="Filter projects by category">
+        <button class="filter is-active" data-filter="all"        role="tab" aria-selected="true"  data-cursor>All</button>
+        <button class="filter"           data-filter="fullstack"  role="tab" aria-selected="false" data-cursor>Full Stack</button>
+        <button class="filter"           data-filter="ai"         role="tab" aria-selected="false" data-cursor>AI / Data</button>
+        <button class="filter"           data-filter="security"   role="tab" aria-selected="false" data-cursor>Security</button>
+        <button class="filter"           data-filter="systems"    role="tab" aria-selected="false" data-cursor>Systems</button>
+      </div>
+
+      <!-- Exhibition index — rows injected by main.js -->
+      <ol id="work-index" class="index"></ol>
+
+      <!-- Floating preview plate (desktop hover) -->
+      <div id="work-preview" class="preview" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- ===================== CAPABILITIES / MARQUEE ===================== -->
+  <section id="skills" class="skills section" aria-labelledby="skills-title">
+    <div class="marquee reveal" aria-hidden="true">
+      <div class="marquee__track" id="marquee-track"></div>
+    </div>
+
+    <div class="wrap">
+      <div class="sec-head sec-head--split">
+        <div>
+          <span class="sec-no">03</span>
+          <h2 id="skills-title" class="sec-title">
+            <span class="ln"><span class="ln__i">Capabilities</span></span>
+          </h2>
+        </div>
+        <p class="sec-note reveal">
+          Grouped by domain, not scored out of a hundred. A filled marker notes the
+          tools I reach for day&nbsp;to&nbsp;day.
+        </p>
+      </div>
+
+      <div id="skills-list" class="caps"></div>
+    </div>
+  </section>
+
+  <!-- ===================== EXPERIENCE ===================== -->
+  <section id="experience" class="exp section" aria-labelledby="exp-title">
+    <div class="wrap">
+      <div class="sec-head sec-head--split">
+        <div>
+          <span class="sec-no">04</span>
+          <h2 id="exp-title" class="sec-title">
+            <span class="ln"><span class="ln__i">The Path</span></span>
+          </h2>
+        </div>
+        <p class="sec-note reveal">
+          Education, roles, certifications, and awards — from Ilocos Norte to MMSU.
+        </p>
+      </div>
+
+      <div class="exp__tabs reveal" role="tablist" aria-label="Experience categories">
+        <button class="exp__tab is-active" data-tab="education" role="tab" aria-selected="true"  aria-controls="ledger-education" data-cursor>Education</button>
+        <button class="exp__tab"            data-tab="work"      role="tab" aria-selected="false" aria-controls="ledger-work"      data-cursor>Work &amp; Awards</button>
+      </div>
+
+      <div id="ledger-education" class="ledger" role="tabpanel"></div>
+      <div id="ledger-work"      class="ledger is-hidden" role="tabpanel"></div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACT (inverted) ===================== -->
+  <section id="contact" class="contact section section--dark" aria-labelledby="contact-title">
+    <div class="wrap">
+      <span class="sec-no">05</span>
+      <h2 id="contact-title" class="contact__title">
+        <span class="ln"><span class="ln__i">Let's work</span></span>
+        <span class="ln"><span class="ln__i">together<span class="hero__amp">.</span></span></span>
       </h2>
-    </div>
 
-    <div class="mt-14 grid gap-14 lg:grid-cols-2 lg:gap-20">
-
-      <!-- Bio -->
-      <div class="reveal reveal-d1 text-[15px] leading-relaxed text-ink-300">
-        <p>
-          I'm a Computer Science graduate from Mariano Marcos State University in
-          Batac City, Ilocos Norte. I care about software that reaches the people
-          who actually need it.
-        </p>
-
-        <!-- Philosophy — his own words, carried over from the original site -->
-        <blockquote class="my-7 border-l-2 border-accent-500/70 pl-5">
-          <p class="text-pretty text-[17px] leading-snug text-ink-100 md:text-lg">
-            Determination is one of the key factors of knowledge.
+      <div class="contact__grid">
+        <div class="contact__info">
+          <p class="contact__note reveal">
+            Have a project, a question, or an opportunity? I'd like to hear from you.
+            I reply within&nbsp;24&nbsp;hours.
           </p>
-          <footer class="mt-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-400">
-            The belief behind every line I write
-          </footer>
-        </blockquote>
 
-        <div class="space-y-5">
-          <p>
-            My work spans web development, mobile development, and AI/ML. I've built
-            AI-powered healthcare chatbots, IoT robotic arm controllers, real-time
-            encrypted chat apps, and cryptography tooling — and I'm always pushing
-            myself to learn, adapt, and ship.
-          </p>
-          <p>
-            I'm currently open to full-time roles and collaborative projects.
-          </p>
+          <dl class="contact__list reveal" data-d="1">
+            <div class="contact__row">
+              <dt class="tick">Email</dt>
+              <dd><a href="mailto:clydedominick09@gmail.com" class="link-arrow" data-cursor>clydedominick09@gmail.com <span aria-hidden="true">↗</span></a></dd>
+            </div>
+            <div class="contact__row">
+              <dt class="tick">Phone</dt>
+              <dd><a href="tel:+639924438041" class="link-arrow" data-cursor>0992 443 8041 <span aria-hidden="true">↗</span></a></dd>
+            </div>
+            <div class="contact__row">
+              <dt class="tick">Location</dt>
+              <dd>Piddig, Ilocos Norte, Philippines</dd>
+            </div>
+            <div class="contact__row">
+              <dt class="tick">Elsewhere</dt>
+              <dd><a href="https://github.com/domckk" class="link-arrow" target="_blank" rel="noopener" data-cursor>GitHub — domckk <span aria-hidden="true">↗</span></a></dd>
+            </div>
+          </dl>
         </div>
 
-        <div class="flex flex-wrap gap-3 pt-3">
-          <a href="https://github.com/domckk" class="btn btn-secondary btn-sm" target="_blank" rel="noopener">
-            <i class="fab fa-github"></i> GitHub
-          </a>
-          <a href="mailto:clydedominick09@gmail.com" class="btn btn-secondary btn-sm">
-            <i class="fas fa-envelope"></i> Email
-          </a>
-        </div>
-      </div>
-
-      <!-- Skills -->
-      <div>
-        <div class="reveal flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
-          <h3 class="font-mono text-xs uppercase tracking-[0.18em] text-ink-400">Core skills</h3>
-          <p class="flex items-center gap-2 text-[11px] text-ink-400">
-            <span class="inline-block h-1.5 w-1.5 rounded-full bg-accent-400"></span>
-            Used day to day
-          </p>
-        </div>
-
-        <div class="mt-7 space-y-7" id="skills-list">
-          <!-- skill groups injected by main.js -->
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ===================== PROJECTS ===================== -->
-<section id="projects" class="border-t border-ink-50/7 py-20 md:py-32">
-  <div class="container-page">
-    <div class="reveal flex flex-wrap items-end justify-between gap-6">
-      <div class="max-w-2xl">
-        <span class="eyebrow">Projects</span>
-        <h2 class="mt-4 text-h2">Selected <span class="text-gradient">work</span></h2>
-        <p class="mt-4 text-[15px] leading-relaxed text-ink-300">
-          School and personal projects across AI, web development, security, and systems programming.
-        </p>
-      </div>
-    </div>
-
-    <!-- Filters -->
-    <div class="reveal reveal-d1 mt-10 flex flex-wrap gap-2" role="tablist" aria-label="Filter projects by category">
-      <button class="filter-btn active" data-filter="all" role="tab" aria-selected="true">All</button>
-      <button class="filter-btn" data-filter="fullstack"  role="tab" aria-selected="false">Full Stack</button>
-      <button class="filter-btn" data-filter="ai"         role="tab" aria-selected="false">AI / Data</button>
-      <button class="filter-btn" data-filter="security"   role="tab" aria-selected="false">Security</button>
-      <button class="filter-btn" data-filter="systems"    role="tab" aria-selected="false">Systems</button>
-    </div>
-
-    <div id="projects-grid" class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      <!-- cards injected by main.js -->
-    </div>
-  </div>
-</section>
-
-<!-- ===================== EXPERIENCE ===================== -->
-<section id="experience" class="border-t border-ink-50/7 py-20 md:py-32">
-  <div class="container-page">
-    <div class="reveal max-w-2xl">
-      <span class="eyebrow">Experience</span>
-      <h2 class="mt-4 text-h2">The <span class="text-gradient">journey</span></h2>
-      <p class="mt-4 text-[15px] leading-relaxed text-ink-300">
-        Education, roles, certifications, and awards — from Ilocos Norte to MMSU.
-      </p>
-    </div>
-
-    <!-- Tabs -->
-    <div class="reveal reveal-d1 mt-10 inline-flex rounded-lg border border-ink-50/9 bg-ink-900/60 p-1" role="tablist" aria-label="Experience categories">
-      <button class="timeline-tab active" data-tab="education" role="tab" aria-selected="true" aria-controls="timeline-education">Education</button>
-      <button class="timeline-tab" data-tab="work"      role="tab" aria-selected="false" aria-controls="timeline-work">Work &amp; Awards</button>
-    </div>
-
-    <div id="timeline-education" class="mt-12" role="tabpanel"></div>
-    <div id="timeline-work"      class="mt-12 hidden" role="tabpanel"></div>
-  </div>
-</section>
-
-<!-- ===================== CONTACT ===================== -->
-<section id="contact" class="border-t border-ink-50/7 py-20 md:py-32">
-  <div class="container-page">
-    <div class="reveal max-w-2xl">
-      <span class="eyeb row">Contact</span>
-      <h2 class="mt-4 text-h2">Let's <span class="text-gradient">work together</span></h2>
-      <p class="mt-4 text-[15px] leading-relaxed text-ink-300">
-        Have a project, a question, or an opportunity? I'd like to hear from you.
-      </p>
-    </div>
-
-    <div class="mt-14 grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-20">
-
-      <!-- Info -->
-      <div class="reveal reveal-d1">
-        <dl class="space-y-1">
-          <a href="mailto:clydedominick09@gmail.com" class="group flex items-center gap-4 rounded-lg p-3 transition-colors hover:bg-ink-50/4">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-ink-50/9 bg-ink-50/3 text-accent-400">
-              <i class="fas fa-envelope text-sm"></i>
-            </div>
-            <div class="min-w-0">
-              <dt class="text-xs text-ink-400">Email</dt>
-              <dd class="truncate text-sm text-ink-100 group-hover:text-accent-300">clydedominick09@gmail.com</dd>
-            </div>
-          </a>
-
-          <a href="tel:+639924438041" class="group flex items-center gap-4 rounded-lg p-3 transition-colors hover:bg-ink-50/4">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-ink-50/9 bg-ink-50/3 text-accent-400">
-              <i class="fas fa-phone text-sm"></i>
-            </div>
-            <div>
-              <dt class="text-xs text-ink-400">Phone</dt>
-              <dd class="text-sm text-ink-100 group-hover:text-accent-300">0992 443 8041</dd>
-            </div>
-          </a>
-
-          <div class="flex items-center gap-4 p-3">
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-ink-50/9 bg-ink-50/3 text-accent-400">
-              <i class="fas fa-location-dot text-sm"></i>
-            </div>
-            <div>
-              <dt class="text-xs text-ink-400">Location</dt>
-              <dd class="text-sm text-ink-100">Piddig, Ilocos Norte, Philippines</dd>
-            </div>
-          </div>
-        </dl>
-
-        <div class="mt-8 flex gap-2 border-t border-ink-50/7 pt-8">
-          <a href="https://github.com/domckk" class="flex h-10 w-10 items-center justify-center rounded-lg border border-ink-50/9 text-ink-300 transition-all hover:-translate-y-0.5 hover:border-accent-500/40 hover:text-accent-300" title="GitHub" target="_blank" rel="noopener">
-            <i class="fab fa-github"></i>
-          </a>
-          <a href="mailto:clydedominick09@gmail.com" class="flex h-10 w-10 items-center justify-center rounded-lg border border-ink-50/9 text-ink-300 transition-all hover:-translate-y-0.5 hover:border-accent-500/40 hover:text-accent-300" title="Email">
-            <i class="fas fa-envelope"></i>
-          </a>
-        </div>
-      </div>
-
-      <!-- Form -->
-      <div class="reveal reveal-d2">
-        <div class="surface p-6 md:p-8">
+        <div class="contact__form-wrap reveal" data-d="1">
           <form id="contact-form" action="https://formsubmit.co/clydedominick09@gmail.com" method="POST" novalidate>
-            <!-- FormSubmit config: no captcha page, custom subject, redirect back here -->
+            <!-- FormSubmit config -->
             <input type="hidden" name="_captcha" value="false" />
             <input type="hidden" name="_template" value="table" />
             <input type="hidden" name="_subject" value="New message from your portfolio" />
-            <!-- Honeypot -->
-            <input type="text" name="_honey" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            <input type="text" name="_honey" class="honey" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
-            <div class="grid gap-5 sm:grid-cols-2">
-              <div>
-                <label class="mb-2 block text-xs font-medium text-ink-200" for="name">Name</label>
-                <input class="field" id="name" name="name" type="text" placeholder="Jane Doe" required autocomplete="name" />
-              </div>
-              <div>
-                <label class="mb-2 block text-xs font-medium text-ink-200" for="email">Email</label>
-                <input class="field" id="email" name="email" type="email" placeholder="jane@example.com" required autocomplete="email" />
-              </div>
+            <div class="field">
+              <label for="name" class="tick">Name</label>
+              <input id="name" name="name" type="text" placeholder="Jane Doe" required autocomplete="name" data-cursor />
+            </div>
+            <div class="field">
+              <label for="email" class="tick">Email</label>
+              <input id="email" name="email" type="email" placeholder="jane@example.com" required autocomplete="email" data-cursor />
+            </div>
+            <div class="field">
+              <label for="subject" class="tick">Subject</label>
+              <input id="subject" name="subject" type="text" placeholder="What's this about?" required data-cursor />
+            </div>
+            <div class="field">
+              <label for="message" class="tick">Message</label>
+              <textarea id="message" name="message" rows="4" placeholder="Tell me about your project or idea…" required data-cursor></textarea>
             </div>
 
-            <div class="mt-5">
-              <label class="mb-2 block text-xs font-medium text-ink-200" for="subject">Subject</label>
-              <input class="field" id="subject" name="subject" type="text" placeholder="What's this about?" required />
-            </div>
+            <p id="form-error" class="form-error" role="alert" hidden></p>
 
-            <div class="mt-5">
-              <label class="mb-2 block text-xs font-medium text-ink-200" for="message">Message</label>
-              <textarea class="field min-h-36 resize-y" id="message" name="message" placeholder="Tell me about your project or idea…" required></textarea>
-            </div>
-
-            <p id="form-error" class="mt-4 hidden text-xs text-rose-400" role="alert"></p>
-
-            <button type="submit" class="btn btn-primary btn-submit mt-6 w-full">
-              Send message <i class="fas fa-arrow-right text-xs"></i>
+            <button type="submit" class="btn-submit" data-cursor>
+              <span>Send message</span><span aria-hidden="true">→</span>
             </button>
           </form>
 
-          <div id="form-success" class="hidden flex-col items-center py-12 text-center">
-            <div class="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500/15 text-emerald-400">
-              <i class="fas fa-check"></i>
-            </div>
-            <h3 class="mt-5 text-lg">Message sent</h3>
-            <p class="mt-2 text-sm text-ink-400">Thanks for reaching out — I'll reply within 24 hours.</p>
+          <div id="form-success" class="form-success" hidden>
+            <span class="form-success__mark" aria-hidden="true">✓</span>
+            <h3>Message sent</h3>
+            <p>Thanks for reaching out — I'll reply within 24 hours.</p>
           </div>
         </div>
       </div>
-
     </div>
-  </div>
-</section>
-
+  </section>
 </main>
 
 <!-- ===================== FOOTER ===================== -->
-<footer class="border-t border-ink-50/7 py-10">
-  <div class="container-page flex flex-col items-center justify-between gap-4 sm:flex-row">
-    <span class="font-mono text-sm text-ink-50">cyy.mrls<span class="text-accent-400">.</span></span>
-    <p class="text-xs text-ink-400">© 2026 Clyde Dominick S. Morales</p>
-    <div class="flex gap-6">
-      <a href="#hero"     class="text-xs text-ink-400 transition-colors hover:text-ink-100">Top</a>
-      <a href="#projects" class="text-xs text-ink-400 transition-colors hover:text-ink-100">Projects</a>
-      <a href="#contact"  class="text-xs text-ink-400 transition-colors hover:text-ink-100">Contact</a>
+<footer class="footer section--dark">
+  <div class="wrap footer__inner">
+    <a href="#top" class="footer__mark" data-cursor>Morales<span class="nav__idx">S.M</span></a>
+    <div class="footer__meta">
+      <span>© 2026 Clyde Dominick S. Morales</span>
+      <span>16.9° N, 120.6° E</span>
     </div>
+    <a href="#top" class="link-arrow" data-cursor>Back to top <span aria-hidden="true">↑</span></a>
   </div>
 </footer>
 
 <!-- ===================== PROJECT MODAL ===================== -->
-<div id="modal-overlay"
-     class="fixed inset-0 z-60 hidden items-center justify-center bg-ink-950/85 p-4 backdrop-blur-md">
-  <div class="surface relative max-h-[88vh] w-full max-w-2xl overflow-y-auto bg-ink-900"
-       role="dialog" aria-modal="true" aria-labelledby="modal-title">
+<div id="modal" class="modal" aria-hidden="true">
+  <div class="modal__backdrop" data-close></div>
+  <div class="modal__sheet" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button id="modal-close" class="modal__close" aria-label="Close" data-close data-cursor>Close <span aria-hidden="true">✕</span></button>
 
-    <div class="sticky top-0 z-10 flex items-start justify-between gap-4 border-b border-ink-50/7 bg-ink-900/95 px-6 py-4 backdrop-blur">
-      <div id="modal-tags" class="flex flex-wrap gap-1.5"></div>
-      <button id="modal-close"
-              class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-ink-50/9 text-ink-300 transition-colors hover:bg-ink-50/5 hover:text-ink-50"
-              aria-label="Close dialog">
-        <i class="fas fa-times text-xs"></i>
-      </button>
+    <div class="modal__head">
+      <span id="modal-no" class="modal__no"></span>
+      <div id="modal-plate" class="modal__plate"></div>
     </div>
 
-    <div class="p-6 md:p-8">
-      <div id="modal-preview" class="mb-7 flex h-44 items-center justify-center overflow-hidden rounded-lg border border-ink-50/7 bg-ink-850">
-        <span id="modal-preview-icon" class="text-5xl"></span>
-      </div>
+    <div class="modal__meta">
+      <span id="modal-year" class="tick"></span>
+      <span id="modal-role" class="tick"></span>
+    </div>
 
-      <h2 id="modal-title" class="text-2xl"></h2>
-      <div id="modal-award" class="mt-4 hidden items-start gap-3 rounded-lg border border-gold-500/25 bg-gold-500/7 p-4 text-xs leading-relaxed text-gold-400"></div>
-      <p id="modal-desc" class="mt-4 text-[15px] leading-relaxed text-ink-300"></p>
+    <h2 id="modal-title" class="modal__title"></h2>
+    <div id="modal-award" class="modal__award" hidden></div>
+    <p id="modal-desc" class="modal__desc"></p>
 
-      <h4 class="mt-8 font-mono text-xs uppercase tracking-[0.18em] text-ink-400">Key features</h4>
-      <ul id="modal-features-list" class="mt-4 space-y-2.5"></ul>
+    <div id="modal-tags" class="modal__tags"></div>
 
-      <div class="mt-8 flex flex-wrap gap-3 border-t border-ink-50/7 pt-6">
-        <a id="modal-github" href="#" class="btn btn-secondary btn-sm" target="_blank" rel="noopener">
-          <i class="fab fa-github"></i> View code
-        </a>
-        <a id="modal-live" href="#" class="btn btn-primary btn-sm" target="_blank" rel="noopener">
-          <i class="fas fa-arrow-up-right-from-square"></i> Live demo
-        </a>
-      </div>
+    <h4 class="modal__sub">Key features</h4>
+    <ul id="modal-features" class="modal__features"></ul>
+
+    <div class="modal__actions">
+      <a id="modal-github" href="#" class="link-arrow" target="_blank" rel="noopener" data-cursor>View code <span aria-hidden="true">↗</span></a>
+      <a id="modal-live"   href="#" class="link-arrow" target="_blank" rel="noopener" data-cursor>Live demo <span aria-hidden="true">↗</span></a>
     </div>
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.1.0/typed.umd.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.13/lenis.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
 <script src="main.js" defer></script>
 
 </body>
