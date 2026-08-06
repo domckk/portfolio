@@ -6,14 +6,15 @@
 
 /* ---------------------------------------------------------------- TOKENS --- */
 :root {
-  /* Ink & paper — refined grayscale ("paper & ink", not screen black/white) */
-  --paper:   #f7f7f5;   /* soft off-white page */
-  --ink:     #0e0e0e;   /* near-black ink + dark sections */
-  --ink-2:   #181818;   /* dark section surface (plates) */
-  --gray:    #6e6e6e;   /* muted body on paper */
-  --gray-2:  #9a9a9a;   /* faint meta on paper */
-  --line:    #e4e4e4;   /* hairline on paper */
-  --panel:   #efefed;   /* subtle fill on paper */
+  /* Ink & paper — grayscale, with visible warmth-free grey (not screen B/W) */
+  --paper:   #efefed;   /* light grey page — clearly off pure white */
+  --ink:     #0e0e0e;   /* near-black ink (text) */
+  --ink-bg:  #1a1a1a;   /* charcoal — background of dark sections */
+  --ink-2:   #262626;   /* dark surface (plates) — a step up from ink-bg */
+  --gray:    #6b6b6b;   /* muted body on paper */
+  --gray-2:  #949494;   /* faint meta on paper */
+  --line:    #d8d8d6;   /* hairline on paper */
+  --panel:   #e5e5e3;   /* subtle fill on paper */
 
   /* On dark sections */
   --paper-inv: #f4f4f4; /* text on dark */
@@ -115,8 +116,8 @@ ol, ul { list-style: none; }
   --muted: var(--gray-inv);
   --faint: var(--gray-inv);
   --hair: var(--line-inv);
-  --bg: var(--ink);
-  background: var(--ink);
+  --bg: var(--ink-bg);
+  background: var(--ink-bg);
   color: var(--paper-inv);
 }
 
@@ -239,13 +240,8 @@ body.cursor-on, body.cursor-on a, body.cursor-on button { cursor: none; }
   align-items: baseline;
   gap: 0.4em;
 }
-.nav__idx {
-  font-family: var(--f-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
-  opacity: 0.55;
-  transform: translateY(-0.3em);
-}
+/* The dot in the C.M wordmark — subtly de-emphasised */
+.nav__dot { opacity: 0.45; }
 .nav__links { display: flex; gap: clamp(1.25rem, 2.5vw, 2.75rem); }
 .nav__link {
   position: relative;
@@ -300,7 +296,7 @@ body.menu-open .nav__burger span:last-child  { transform: translateY(-5px) rotat
   position: fixed;
   inset: 0;
   z-index: 110;
-  background: var(--ink);
+  background: var(--ink-bg);
   color: var(--paper);
   display: flex;
   flex-direction: column;
@@ -979,7 +975,7 @@ body.menu-open .menu__link { opacity: 1; transform: none; }
 
 /* --------------------------------------------------------------- FOOTER --- */
 .footer {
-  background: var(--ink);
+  background: var(--ink-bg);
   color: var(--paper-inv);
   padding-block: clamp(2.5rem, 5vw, 4rem);
   border-top: var(--rule) solid var(--line-inv);
@@ -1070,7 +1066,7 @@ body.menu-open .menu__link { opacity: 1; transform: none; }
 .modal__plate {
   flex: 1;
   aspect-ratio: 16 / 9;
-  background: var(--ink);
+  background: var(--ink-bg);
   display: flex;
   align-items: center;
   justify-content: center;
