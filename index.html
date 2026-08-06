@@ -207,8 +207,9 @@
       </div>
     </div>
 
-    <!-- Horizontal gallery — pinned + scrubbed on desktop, native swipe on touch -->
-    <div class="gallery" id="gallery">
+    <!-- Horizontal gallery — pinned + scrubbed on desktop, native swipe on touch.
+         data-lenis-prevent keeps horizontal touch-scroll native so swipe works. -->
+    <div class="gallery" id="gallery" data-lenis-prevent>
       <ol class="gallery__track" id="gallery-track"></ol>
       <div class="gallery__foot" aria-hidden="true">
         <span class="gallery__count"><em id="gallery-cur">01</em> / <span id="gallery-total">08</span></span>
@@ -360,7 +361,7 @@
 <!-- ===================== PROJECT MODAL ===================== -->
 <div id="modal" class="modal" aria-hidden="true">
   <div class="modal__backdrop" data-close></div>
-  <div class="modal__sheet" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal__sheet" role="dialog" aria-modal="true" aria-labelledby="modal-title" data-lenis-prevent>
     <button id="modal-close" class="modal__close" aria-label="Close" data-close data-cursor>Close <span aria-hidden="true">✕</span></button>
 
     <div class="modal__head">

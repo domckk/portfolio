@@ -330,12 +330,17 @@ function initCore () {
 
   document.documentElement.classList.add('js');
 
-  // Lenis on desktop only; touch keeps native momentum scrolling.
-  if (typeof Lenis !== 'undefined' && !isTouch() && !reduce()) {
+  // Buttery smooth scroll on desktop AND touch. Elements marked
+  // [data-lenis-prevent] (the horizontal gallery, modal sheet) keep native
+  // scrolling so their own swipe/scroll still works. Off for reduced-motion.
+  if (typeof Lenis !== 'undefined' && !reduce()) {
     lenis = new Lenis({
-      duration: 1.1,
-      easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      duration: 1.15,
+      easing: t => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t)), // expo-out
       smoothWheel: true,
+      syncTouch: true,          // smooth on mobile too
+      syncTouchLerp: 0.085,
+      touchInertiaMultiplier: 18,
     });
 
     if (canGsap && typeof ScrollTrigger !== 'undefined') {
